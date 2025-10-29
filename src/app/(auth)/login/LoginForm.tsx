@@ -21,11 +21,16 @@ import { FaGithub } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginSchema } from "@/lib/schemas/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signInUser } from "@/actions/authActions";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -35,8 +40,14 @@ export default function LoginForm({
     mode: "onChange",
   });
 
-  const onSubmit = (data: LoginSchema) => {
-    console.log(data);
+  const onSubmit = async (data: LoginSchema) => {
+    const result = await signInUser(data);
+    if (result.status === "success") {
+      router.push("/network");
+      router.refresh();
+    } else {
+      toast.error(result.error as string);
+    }
   };
 
   return (
