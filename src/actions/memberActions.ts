@@ -53,6 +53,8 @@ export async function getUndiscoveredMembers(
   }
 
   try {
+    // Swiped members
+
     const swipedMemberIds = await prisma.like.findMany({
       where: {
         sourceUserId: currentUserId,
@@ -63,6 +65,8 @@ export async function getUndiscoveredMembers(
     });
 
     const swipedIds = swipedMemberIds.map((like) => like.targetUserId);
+
+    // Not swiped yet
 
     const undiscoveredMembers = await prisma.member.findMany({
       where: {
@@ -88,6 +92,7 @@ export async function recordSwipe(
   isLike: boolean
 ) {
   try {
+    // Only likes
     if (isLike) {
       await prisma.like.create({
         data: {
@@ -102,4 +107,21 @@ export async function recordSwipe(
     console.error("Error recording swipe:", error);
     return { success: false, error: "Failed to record swipe" };
   }
+}
+
+export async function fetchMutualLikes(userId: string) {
+  const likedUsers = await prisma.like.findMany({
+    where: { sourceUserId: userId },
+    select: { targetUserId: true },
+  });
+
+  const likedIds = likedUsers.map((x) => x.targetUserId);
+
+  const mutualList = await prisma.like.findMany({
+    where: {
+      AND: [{ targetUserId: userId }, { sourceUserId: { in: likedIds } }],
+    },
+    select: { sourceMember: true },
+  });
+  return mutualList.map((x) => x.sourceMember);
 }

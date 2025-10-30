@@ -28,7 +28,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
-        setValue("profilePicture", reader.result as string);
+        // setValue("profilePicture", reader.result as string);
       };
       reader.readAsDataURL(file);
     }

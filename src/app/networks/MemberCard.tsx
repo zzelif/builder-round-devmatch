@@ -66,7 +66,6 @@ export default function MemberCard({
     >
       <Card className="w-full h-full bg-white shadow-xl">
         <CardContent className="p-0 h-full flex flex-col">
-          {/* Profile Image */}
           <div className="relative h-2/3 bg-linear-to-br from-pink-100 to-blue-100 rounded-t-lg overflow-hidden">
             {member.image ? (
               <Image
@@ -83,7 +82,6 @@ export default function MemberCard({
               </div>
             )}
 
-            {/* Swipe indicators */}
             <motion.div
               className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg"
               style={{
@@ -102,7 +100,6 @@ export default function MemberCard({
             </motion.div>
           </div>
 
-          {/* Profile Info */}
           <div className="p-6 h-1/3 flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               {member.name}, {member.age}

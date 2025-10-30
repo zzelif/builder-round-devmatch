@@ -110,7 +110,6 @@ export default function SwipeInterface({
         </button>
       </div>
 
-      {/* Progress indicator */}
       <div className="text-center mt-4 text-gray-600">
         {currentIndex + 1} of {members.length} profiles
       </div>

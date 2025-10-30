@@ -17,6 +17,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 type Props = {
   user: Session["user"];
@@ -32,7 +33,10 @@ export default function Menu({ user }: Props) {
           className="flex items-center justify-center rounded-full"
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.image} alt={user?.name || "User Avatar"} />
+            <AvatarImage
+              src={user?.image || undefined}
+              alt={user?.name || "User Avatar"}
+            />
             <AvatarFallback>
               {user?.name?.charAt(0).toUpperCase() || "A"}
             </AvatarFallback>
@@ -43,7 +47,7 @@ export default function Menu({ user }: Props) {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Profile
+            <Link href="/networks/edit">Profile</Link>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
