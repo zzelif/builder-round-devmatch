@@ -11,19 +11,15 @@ export default auth((req) => {
   const isPublic = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  if (isPublic) {
-    return NextResponse.next();
-  }
-
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/network", nextUrl));
+      return Response.redirect(new URL("/network", nextUrl));
     }
     return NextResponse.next();
   }
 
-  if (!isPublic && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", nextUrl));
+  if (!isAuthRoute && !isLoggedIn && !isPublic) {
+    return Response.redirect(new URL("/login", nextUrl));
   }
 
   return NextResponse.next();

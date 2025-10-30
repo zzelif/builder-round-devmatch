@@ -8,7 +8,7 @@ import {
   RegisterSchema,
 } from "@/lib/schemas/RegisterSchema";
 import { ActionResult } from "@/types";
-import { User } from "@/generated/prisma";
+import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 
@@ -16,12 +16,6 @@ export async function signInUser(
   data: LoginSchema
 ): Promise<ActionResult<string>> {
   try {
-    const existingUser = await getUserByEmail(data.email);
-
-    if (!existingUser || !existingUser.passwordHash) {
-      return { status: "error", error: "Invalid credentials" };
-    }
-
     await signIn("credentials", {
       email: data.email,
       password: data.password,
@@ -31,7 +25,6 @@ export async function signInUser(
     return { status: "success", data: "Logged in" };
   } catch (error) {
     console.log(error);
-
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -39,8 +32,9 @@ export async function signInUser(
         default:
           return { status: "error", error: "Something went wrong" };
       }
+    } else {
+      return { status: "error", error: "Something else went wrong" };
     }
-    return { status: "error", error: "Something else went wrong" };
   }
 }
 

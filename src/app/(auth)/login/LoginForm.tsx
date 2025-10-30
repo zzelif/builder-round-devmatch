@@ -34,15 +34,17 @@ export default function LoginForm({
   const {
     register,
     handleSubmit,
-    formState: { isValid, errors },
+    formState: { isValid, errors, isSubmitting },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     mode: "onChange",
   });
 
   const onSubmit = async (data: LoginSchema) => {
+    console.log("Submitting login form with data:", data);
     const result = await signInUser(data);
     if (result.status === "success") {
+      console.log("Login successful:", result);
       router.push("/network");
       router.refresh();
     } else {
@@ -108,7 +110,7 @@ export default function LoginForm({
               </Field>
               <Field>
                 <Button type="submit" disabled={!isValid}>
-                  Login
+                  {isSubmitting ? "Signing in" : "Login"}
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="/register">Sign up</a>

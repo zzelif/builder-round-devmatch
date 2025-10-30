@@ -32,10 +32,7 @@ export default function Menu({ user }: Props) {
           className="flex items-center justify-center rounded-full"
         >
           <Avatar className="h-8 w-8">
-            <AvatarImage
-              src="https://github.com/evilrabbit.png"
-              alt={user?.name || "User Avatar"}
-            />
+            <AvatarImage src={user?.image} alt={user?.name || "User Avatar"} />
             <AvatarFallback>
               {user?.name?.charAt(0).toUpperCase() || "A"}
             </AvatarFallback>
