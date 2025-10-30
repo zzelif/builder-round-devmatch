@@ -52,7 +52,9 @@ export async function registerUser(
       return { status: "error", error: validated.error.issues };
     }
 
-    const { name, email, password, bio } = validated.data;
+    const { name, email, password, bio, age, profilePicture } = validated.data;
+
+    const imageUrl = null;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -71,7 +73,8 @@ export async function registerUser(
           create: {
             name,
             bio,
-            // profilePicture,
+            age,
+            image: imageUrl,
           },
         },
       },

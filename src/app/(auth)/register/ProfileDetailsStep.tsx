@@ -28,6 +28,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
+        setValue("profilePicture", reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -77,7 +78,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
         )}
       </Field>
 
-      {/* <Field>
+      <Field>
         <FieldLabel htmlFor="profilePicture">Profile Picture</FieldLabel>
         <Input
           id="profilePicture"
@@ -103,7 +104,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
           </p>
         )}
         <FieldDescription>JPG, PNG, or WebP. Max 5MB.</FieldDescription>
-      </Field> */}
+      </Field>
 
       <div className="flex gap-4">
         <Button

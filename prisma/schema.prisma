@@ -51,13 +51,17 @@ model Member {
   id      String   @id @default(cuid())
   userId  String   @unique
   name    String
+  age     Int
   created DateTime @default(now())
   updated DateTime @updatedAt
   bio     String
-  image   String?
+  image   String?  @db.Text
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   photos Photo[]
+
+  sourceLikes Like[] @relation("sourceLikes")
+  targetLikes Like[] @relation("targetLikes")
 }
 
 model Photo {
@@ -67,4 +71,16 @@ model Photo {
   memberId String
 
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id           String   @id @default(cuid())
+  sourceUserId String
+  targetUserId String
+  createdAt    DateTime @default(now())
+
+  sourceMember Member @relation("sourceLikes", fields: [sourceUserId], references: [userId])
+  targetMember Member @relation("targetLikes", fields: [targetUserId], references: [userId])
+
+  @@unique([sourceUserId, targetUserId])
 }

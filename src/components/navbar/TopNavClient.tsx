@@ -21,7 +21,7 @@ import Link from "next/link";
 import Menu from "./Menu";
 
 const navigationLinks = [
-  { href: "/network", label: "Network", icon: HouseIcon },
+  { href: "/networks", label: "Networks", icon: HouseIcon },
   { href: "/collab", label: "Collab", icon: InboxIcon },
   { href: "/lists", label: "Lists", icon: ZapIcon },
 ];
@@ -100,13 +100,13 @@ export default function TopNav({ session }: TopNavClientProps) {
           </Popover>
 
           <div className="flex items-center">
-            <a
+            <Link
               title="logo"
-              href="#"
+              href="/"
               className="text-primary hover:text-primary/90"
             >
               <Logo />
-            </a>
+            </Link>
           </div>
         </div>
 

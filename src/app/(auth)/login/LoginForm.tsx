@@ -45,7 +45,7 @@ export default function LoginForm({
     const result = await signInUser(data);
     if (result.status === "success") {
       console.log("Login successful:", result);
-      router.push("/network");
+      router.push("/networks");
       router.refresh();
     } else {
       toast.error(result.error as string);

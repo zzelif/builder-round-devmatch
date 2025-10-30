@@ -41,17 +41,17 @@ export const profileDetailsSchema = z.object({
     .string()
     .min(10, "Bio must be at least 10 characters")
     .max(500, "Bio must be less than 500 characters"),
-  // profilePicture: z
-  //   .custom<FileList>()
-  //   .refine((files) => files?.length === 1, "Profile picture is required")
-  //   .refine(
-  //     (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-  //     "Profile picture must be less than 5MB"
-  //   )
-  //   .refine(
-  //     (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-  //     "Only .jpg, .jpeg, .png and .webp formats are supported"
-  //   ),
+  profilePicture: z
+    .custom<FileList>()
+    .refine((files) => files?.length === 1, "Profile picture is required")
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      "Profile picture must be less than 5MB"
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported"
+    ),
 });
 
 export const combinedRegisterSchema =
