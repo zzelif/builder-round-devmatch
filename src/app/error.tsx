@@ -18,7 +18,7 @@ export default function Error({
 }) {
   return (
     <div className="flex items-center justify-center vertical-center">
-      <Card className="w-2/5 mx-auto">
+      <Card className="w-5/6 mx-auto">
         <CardHeader className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-2 items-center text-default">
             <BiSolidError size={30} />
@@ -26,7 +26,9 @@ export default function Error({
           </div>
         </CardHeader>
         <CardContent className="flex justify-center text-danger">
-          <div className="flex justify-center text-danger">{error.message}</div>
+          <div className="flex justify-center text-danger text-sm">
+            {error.message}
+          </div>
         </CardContent>
         <CardFooter className="flex justify-center">
           <Button onClick={() => reset()} color="bordered" variant="default">

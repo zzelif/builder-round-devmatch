@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Member } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -104,34 +104,6 @@ export default function EditForm({ member }: Props) {
             </p>
           )}
         </Field>
-
-        {/* <Field>
-        <FieldLabel htmlFor="profilePicture">Profile Picture</FieldLabel>
-        <Input
-          id="profilePicture"
-          type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
-          className={cn(errors.profilePicture && "border-destructive")}
-          {...register("profilePicture", { onChange: handleImageChange })}
-        />
-        {previewImage && (
-          <div className="mt-2 flex justify-center">
-            <Image
-              src={previewImage}
-              alt="Preview"
-              width={96}
-              height={96}
-              className="rounded-full object-cover border-2"
-            />
-          </div>
-        )}
-        {errors.profilePicture && (
-          <p className="text-sm text-destructive mt-1">
-            {errors.profilePicture.message?.toString()}
-          </p>
-        )}
-        <FieldDescription>JPG, PNG, or WebP. Max 5MB.</FieldDescription>
-      </Field> */}
 
         <Button
           type="submit"

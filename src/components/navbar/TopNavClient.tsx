@@ -1,7 +1,7 @@
 // src\components\navbar\TopNavClient.tsx
 "use client";
 
-import { HouseIcon, InboxIcon, ZapIcon } from "lucide-react";
+import { HouseIcon, InboxIcon, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import Logo from "@/components/navbar/logo";
@@ -23,7 +23,7 @@ import Menu from "./Menu";
 const navigationLinks = [
   { href: "/networks", label: "Networks", icon: HouseIcon },
   { href: "/collab", label: "Collab", icon: InboxIcon },
-  { href: "/lists", label: "Lists", icon: ZapIcon },
+  { href: "/lists", label: "Lists", icon: Users },
 ];
 
 interface TopNavClientProps {

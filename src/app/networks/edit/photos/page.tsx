@@ -4,8 +4,26 @@ import {
   getMemberPhotosByUserId,
 } from "@/actions/memberActions";
 import CardInnerWrapper from "@/components/CardInnerWrapper";
-import React from "react";
+import MemberPhotos from "@/components/MemberPhotos";
 
-export default function page() {
-  return <div>page</div>;
+export default async function PhotosPage() {
+  const userId = await getAuthUserId();
+  const member = await getMemberById(userId);
+
+  const photos = await getMemberPhotosByUserId(userId);
+
+  return (
+    <CardInnerWrapper
+      header="Edit Profile"
+      body={
+        <>
+          <MemberPhotos
+            photos={photos}
+            editing={true}
+            mainImageUrl={member?.image}
+          />
+        </>
+      }
+    ></CardInnerWrapper>
+  );
 }
