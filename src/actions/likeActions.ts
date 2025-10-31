@@ -102,11 +102,13 @@ export async function recordSwipe(
       },
     });
 
-    await pusherServer.trigger(`private-${targetUserId}`, "like:new", {
-      name: like.sourceMember.name,
-      image: like.sourceMember.image,
-      userId: like.sourceMember.userId,
-    });
+    if (pusherServer) {
+      await pusherServer.trigger(`private-${targetUserId}`, "like:new", {
+        name: like.sourceMember.name,
+        image: like.sourceMember.image,
+        userId: sourceUserId,
+      });
+    }
 
     const isMatch = await prisma.like.findUnique({
       where: {

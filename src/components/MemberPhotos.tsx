@@ -1,15 +1,15 @@
-// src/components/MemberPhotos.tsx - COMPLETE PHOTO MANAGEMENT
+// src/components/MemberPhotos.tsx - FIXED TYPESCRIPT ISSUES
 "use client";
 
-import { Photo } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import { CldImage } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
-import { Star, Trash2, Loader2 } from "lucide-react";
-import { setMainImage, deleteImage } from "@/actions/userActions";
+import { deleteImage, setMainImage } from "@/actions/userActions";
+import { Photo } from "@prisma/client";
+import { CldImage } from "next-cloudinary";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { toast } from "react-toastify";
+// import { FaImage } from "react-icons/fa";
 
 type Props = {
   photos: Photo[] | null;
@@ -18,148 +18,119 @@ type Props = {
 };
 
 export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
-  const router = useRouter();
   const [loading, setLoading] = useState({
     type: "",
     isLoading: false,
     id: "",
   });
+  const [, startTransition] = useTransition();
+  const router = useRouter();
 
-  const onSetMain = async (photo: Photo) => {
+  const onSetMain = (photo: Photo) => {
+    if (photo.url === mainImageUrl) return null;
+
+    setLoading({ isLoading: true, id: photo.id, type: "main" });
+
+    startTransition(() => {
+      setMainImage(photo)
+        .then(() => {
+          toast.success("Main image updated successfully");
+          router.refresh();
+        })
+        .catch((error: Error) => {
+          console.error("Set main image error:", error);
+          toast.error(error.message);
+        })
+        .finally(() => {
+          setLoading({ isLoading: false, id: "", type: "" });
+        });
+    });
+  };
+
+  const onDelete = (photo: Photo) => {
     if (photo.url === mainImageUrl) return;
 
-    setLoading({
-      isLoading: true,
-      id: photo.id,
-      type: "main",
+    setLoading({ isLoading: true, id: photo.id, type: "delete" });
+
+    startTransition(() => {
+      deleteImage(photo)
+        .then(() => {
+          toast.success("Image deleted successfully");
+          router.refresh();
+        })
+        .catch((error: Error) => {
+          console.error("Delete image error:", error);
+          toast.error(error.message);
+        })
+        .finally(() => {
+          setLoading({ isLoading: false, id: "", type: "" });
+        });
     });
-
-    try {
-      await setMainImage(photo);
-      toast.success("Profile photo updated!");
-      router.refresh();
-    } catch (error: any) {
-      toast.error("Failed to set main photo");
-    } finally {
-      setLoading({
-        isLoading: false,
-        id: "",
-        type: "",
-      });
-    }
   };
-
-  const onDelete = async (photo: Photo) => {
-    if (photo.url === mainImageUrl) return null;
-    setLoading({
-      isLoading: true,
-      id: photo.id,
-      type: "delete",
-    });
-    try {
-      await deleteImage(photo);
-      toast.success("Successfully deleted the photo");
-      router.refresh();
-    } catch (error: any) {
-      toast.error("Failed too delete photo");
-    } finally {
-      setLoading({
-        isLoading: false,
-        id: "",
-        type: "",
-      });
-    }
-  };
-
-  if (!photos || photos.length === 0) {
-    return (
-      <div className="text-center py-8">
-        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-          <div className="text-2xl opacity-40">📸</div>
-        </div>
-        <p className="text-gray-500">No photos uploaded yet</p>
-        {editing && (
-          <p className="text-sm text-gray-400 mt-2">
-            Upload photos to make your profile more attractive
-          </p>
-        )}
-      </div>
-    );
-  }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {photos.map((photo) => (
-        <div key={photo.id} className="relative group aspect-square">
-          {photo.publicId ? (
-            <CldImage
-              alt="Member photo"
-              src={photo.publicId}
-              fill
-              className="object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow"
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-            />
-          ) : (
-            <Image
-              src={photo.url}
-              alt="Member photo"
-              className="w-full h-full object-cover rounded-lg shadow-md group-hover:shadow-lg transition-shadow"
-              unoptimized
-            />
-          )}
-
-          {/* Main Photo Indicator */}
-          {photo.url === mainImageUrl && (
-            <div className="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded-full shadow-lg">
-              ✨ Profile
+    <div className="grid grid-cols-5 gap-3 p-5">
+      {photos &&
+        photos.map((photo) => (
+          <div key={photo.id} className="relative">
+            <div className="aspect-square relative overflow-hidden rounded-lg">
+              {photo.publicId ? (
+                <CldImage
+                  alt="member image"
+                  src={photo.publicId}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <Image
+                  src={photo.url}
+                  fill
+                  alt="member image"
+                  className="object-cover"
+                />
+              )}
             </div>
-          )}
-
-          {/* Action Buttons (Show on editing mode) */}
-          {editing && (
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-              {photo.url !== mainImageUrl && (
+            {editing && (
+              <div className="flex flex-row gap-2 mt-2">
                 <Button
-                  size="sm"
                   onClick={() => onSetMain(photo)}
-                  disabled={loading.isLoading && loading.id === photo.id}
-                  className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/20"
+                  size="sm"
+                  variant={photo.url === mainImageUrl ? "default" : "secondary"}
+                  disabled={
+                    loading.isLoading &&
+                    loading.id === photo.id &&
+                    loading.type === "main"
+                  }
                 >
                   {loading.isLoading &&
                   loading.id === photo.id &&
-                  loading.type === "main" ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Star className="w-4 h-4 mr-1" />
-                      Set Main
-                    </>
-                  )}
+                  loading.type === "main"
+                    ? "Loading..."
+                    : photo.url === mainImageUrl
+                    ? "Main"
+                    : "Main"}
                 </Button>
-              )}
-
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => onDelete(photo)}
-                disabled={loading.isLoading && loading.id === photo.id}
-                className="bg-red-500/80 backdrop-blur-sm hover:bg-red-600/80 text-white"
-              >
-                {loading.isLoading &&
-                loading.id === photo.id &&
-                loading.type === "delete" ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
-        </div>
-      ))}
+                <Button
+                  onClick={() => onDelete(photo)}
+                  variant="outline"
+                  size="sm"
+                  disabled={
+                    photo.url === mainImageUrl ||
+                    (loading.isLoading &&
+                      loading.id === photo.id &&
+                      loading.type === "delete")
+                  }
+                >
+                  {loading.isLoading &&
+                  loading.id === photo.id &&
+                  loading.type === "delete"
+                    ? "..."
+                    : "Delete"}
+                </Button>
+              </div>
+            )}
+          </div>
+        ))}
     </div>
   );
 }

@@ -1,8 +1,8 @@
-// src/hooks/useMessages.tsx - FIXED INFINITE LOOP
+// src/hooks/useMessages.ts - FIXED ALL ESLINT ISSUES
 "use client";
 
 import { MessageDto } from "@/types";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { deleteMessage } from "@/actions/messageActions";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -18,15 +18,14 @@ export function useMessages(
 ) {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const container = searchParams.get("container") || "inbox";
 
-  // ✅ Use state instead of store to prevent infinite loops
   const [messages, setMessages] = useState(initialMessages);
   const [hasMore, setHasMore] = useState(!!nextCursor);
   const [loadingMore, setLoadingMore] = useState(false);
   const [isDeleting, setIsDeleting] = useState({ loading: false, id: "" });
 
-  // ✅ Prevent re-initialization on every render
   const initializedRef = useRef(false);
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export function useMessages(
 
   const isOutbox = container === "outbox";
 
-  // ✅ Memoize columns to prevent recreating on every render
   const columns: Column[] = useMemo(() => {
     if (isOutbox) {
       return [
@@ -58,7 +56,6 @@ export function useMessages(
     }
   }, [isOutbox]);
 
-  // ✅ Memoized delete function to prevent recreation
   const handleDeleteMessage = useCallback(
     async (message: MessageDto) => {
       setIsDeleting({ loading: true, id: message.id });
@@ -75,12 +72,10 @@ export function useMessages(
     [isOutbox]
   );
 
-  // ✅ Memoized select row function
   const selectRow = useCallback(
     (id: string) => {
       const message = messages.find((m) => m.id === id);
       if (message) {
-        const searchParams = new URLSearchParams();
         const otherUserId = isOutbox ? message.recipientId : message.senderId;
         router.push(`/networks/${otherUserId}/chat`);
       }
@@ -88,22 +83,19 @@ export function useMessages(
     [messages, isOutbox, router]
   );
 
-  // ✅ Load more function with proper state management
+  // ✅ Fixed: Remove container from dependencies
   const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
 
     setLoadingMore(true);
     try {
-      // Implement your load more logic here
-      // const response = await getMessagesByContainer(container, nextCursor);
-      // setMessages(prev => [...prev, ...response.messages]);
-      // setHasMore(!!response.nextCursor);
+      // Implement load more logic here
     } catch (error) {
       console.error("Error loading more messages:", error);
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasMore, container]);
+  }, [loadingMore, hasMore]); // ✅ Removed container dependency
 
   return {
     columns,

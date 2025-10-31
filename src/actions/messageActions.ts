@@ -32,16 +32,18 @@ export async function createMessage(
     });
     const messageDto = mapMessageToMessageDto(message);
 
-    await pusherServer.trigger(
-      createChatId(userId, recipientUserId),
-      "message:new",
-      messageDto
-    );
-    await pusherServer.trigger(
-      `private-${recipientUserId}`,
-      "message:new",
-      messageDto
-    );
+    if (pusherServer) {
+      await pusherServer.trigger(
+        createChatId(userId, recipientUserId),
+        "message:new",
+        messageDto
+      );
+      await pusherServer.trigger(
+        `private-${recipientUserId}`,
+        "message:new",
+        messageDto
+      );
+    }
 
     return { status: "success", data: messageDto };
   } catch (error) {
@@ -98,11 +100,13 @@ export async function getMessageThread(recipientId: string) {
 
       readCount = unreadMessageIds.length;
 
-      await pusherServer.trigger(
-        createChatId(recipientId, userId),
-        "messages:read",
-        unreadMessageIds
-      );
+      if (pusherServer) {
+        await pusherServer.trigger(
+          createChatId(recipientId, userId),
+          "messages:read",
+          unreadMessageIds
+        );
+      }
     }
 
     return {

@@ -1,9 +1,8 @@
+// src/app/networks/[userId]/chat/MessageBox.tsx - FIXED SCROLL LOOP
 "use client";
 
 import { MessageDto } from "@/types";
-import { useRef } from "react";
 import clsx from "clsx";
-import { useEffect } from "react";
 import { timeAgo } from "@/lib/utils";
 import PresenceAvatar from "@/components/PresenceAvatar";
 
@@ -15,26 +14,19 @@ type Props = {
 export default function MessageBox({ message, currentUserId }: Props) {
   const isCurrentUserSender = message.senderId === currentUserId;
 
-  const messageEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (messageEndRef.current)
-      messageEndRef.current.scrollIntoView({
-        behavior: "smooth",
-      });
-  }, [messageEndRef]);
-
   const renderAvatar = () => (
     <div className="self-end">
       <PresenceAvatar src={message.senderImage} userId={message.senderId} />
     </div>
   );
 
-  const messageContentClasses = clsx("flex flex-col w-[50%] px-2 py-1", {
-    "rounded-l-xl rounded-tr-xl text-white bg-blue-100": isCurrentUserSender,
-    "rounded-r-xl rounded-tl-xl border-gray-200 bg-green-100":
-      !isCurrentUserSender,
-  });
+  const messageContentClasses = clsx(
+    "flex flex-col w-[50%] px-3 py-2 rounded-lg",
+    {
+      "bg-blue-500 text-white rounded-br-none": isCurrentUserSender,
+      "bg-gray-100 text-gray-900 rounded-bl-none": !isCurrentUserSender,
+    }
+  );
 
   const renderMessageHeader = () => (
     <div
@@ -43,17 +35,29 @@ export default function MessageBox({ message, currentUserId }: Props) {
       })}
     >
       {message.dateRead && message.recipientId !== currentUserId ? (
-        <span className="text-xs text-black text-italic">
+        <span className="text-xs opacity-75 italic">
           (Read {timeAgo(message.dateRead)})
         </span>
       ) : (
         <div></div>
       )}
       <div className="flex">
-        <span className="text-sm font-semibold text-gray-900">
+        <span
+          className={clsx("text-sm font-semibold", {
+            "text-white": isCurrentUserSender,
+            "text-gray-900": !isCurrentUserSender,
+          })}
+        >
           {message.senderName}
         </span>
-        <span className="text-sm text-gray-500 ml-2">{message.created}</span>
+        <span
+          className={clsx("text-xs ml-2 opacity-75", {
+            "text-white": isCurrentUserSender,
+            "text-gray-500": !isCurrentUserSender,
+          })}
+        >
+          {message.created}
+        </span>
       </div>
     </div>
   );
@@ -62,24 +66,28 @@ export default function MessageBox({ message, currentUserId }: Props) {
     return (
       <div className={messageContentClasses}>
         {renderMessageHeader()}
-        <p className="text-sm py-3 text-gray-900">{message.text}</p>
+        <p
+          className={clsx("text-sm py-1", {
+            "text-white": isCurrentUserSender,
+            "text-gray-900": !isCurrentUserSender,
+          })}
+        >
+          {message.text}
+        </p>
       </div>
     );
   };
 
   return (
-    <div className="grid grid-rows-1">
-      <div
-        className={clsx("flex gap-2 mb-3", {
-          "justify-end text-right": isCurrentUserSender,
-          "justify-start": !isCurrentUserSender,
-        })}
-      >
-        {!isCurrentUserSender && renderAvatar()}
-        {renderMessageContent()}
-        {isCurrentUserSender && renderAvatar()}
-      </div>
-      <div ref={messageEndRef} />
+    <div
+      className={clsx("flex gap-3 mb-4", {
+        "justify-end": isCurrentUserSender,
+        "justify-start": !isCurrentUserSender,
+      })}
+    >
+      {!isCurrentUserSender && renderAvatar()}
+      {renderMessageContent()}
+      {isCurrentUserSender && renderAvatar()}
     </div>
   );
 }

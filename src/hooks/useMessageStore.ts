@@ -7,10 +7,10 @@ interface MessageState {
   resetMessages: () => void;
 }
 
-// ✅ Cache the server snapshot to prevent infinite loops
-let cachedServerSnapshot: string | null = null;
+// ✅ Cache server snapshot to prevent infinite loops
+const serverSnapshot = JSON.stringify({ unreadCount: 0 });
 
-export const useMessageStore = create<MessageState>((set, get) => ({
+export const useMessageStore = create<MessageState>((set) => ({
   unreadCount: 0,
   updateUnreadCount: (amount: number) => {
     set((state) => ({
@@ -20,15 +20,5 @@ export const useMessageStore = create<MessageState>((set, get) => ({
   resetMessages: () => set({ unreadCount: 0 }),
 }));
 
-// ✅ Add stable server snapshot function
-if (typeof window === "undefined") {
-  cachedServerSnapshot = JSON.stringify({ unreadCount: 0 });
-}
-
-// Export for server-side rendering compatibility
-export const getServerSnapshot = () => {
-  if (!cachedServerSnapshot) {
-    cachedServerSnapshot = JSON.stringify({ unreadCount: 0 });
-  }
-  return cachedServerSnapshot;
-};
+// ✅ Export cached server snapshot function
+export const getServerSnapshot = () => serverSnapshot;

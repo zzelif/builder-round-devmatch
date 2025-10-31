@@ -4,6 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    if (!pusherServer) {
+      return new Response("Pusher server not initialized", { status: 500 });
+    }
     const session = await auth();
 
     if (!session?.user?.id) {

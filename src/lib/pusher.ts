@@ -1,15 +1,13 @@
+// src/lib/pusher.ts - COMPLETELY FIXED
 import PusherServer from "pusher";
 import PusherClient from "pusher-js";
 
 const CLUSTER = "ap1";
 
-declare global {
-  var pusherServerInstance: PusherServer | undefined;
-  var pusherClientInstance: PusherClient | undefined;
-}
-
-if (!global.pusherServerInstance) {
-  global.pusherServerInstance = new PusherServer({
+// ✅ Create server instance ONLY on server
+let pusherServerInstance: PusherServer | null = null;
+if (typeof window === "undefined") {
+  pusherServerInstance = new PusherServer({
     appId: process.env.PUSHER_APP_ID!,
     key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY!,
     secret: process.env.PUSHER_SECRET!,
@@ -18,8 +16,10 @@ if (!global.pusherServerInstance) {
   });
 }
 
-if (!global.pusherClientInstance) {
-  global.pusherClientInstance = new PusherClient(
+// ✅ Create client instance ONLY on client
+let pusherClientInstance: PusherClient | null = null;
+if (typeof window !== "undefined") {
+  pusherClientInstance = new PusherClient(
     process.env.NEXT_PUBLIC_PUSHER_APP_KEY!,
     {
       cluster: CLUSTER,
@@ -31,5 +31,6 @@ if (!global.pusherClientInstance) {
   );
 }
 
-export const pusherServer = global.pusherServerInstance;
-export const pusherClient = global.pusherClientInstance;
+// ✅ Safe exports - NO GLOBAL USAGE
+export const pusherServer = pusherServerInstance;
+export const pusherClient = pusherClientInstance;
