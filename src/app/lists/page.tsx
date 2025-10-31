@@ -21,12 +21,19 @@ export default async function ListPage() {
     fetchLikedMembers(userId, "mutual"),
   ]);
 
+  const serializedData = {
+    likedMembers: JSON.parse(JSON.stringify(likedMembers)),
+    whoLikedMe: JSON.parse(JSON.stringify(whoLikedMe)),
+    mutualMatches: JSON.parse(JSON.stringify(mutualMatches)),
+    currentUserId: userId,
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <ListsTab
-        likedMembers={likedMembers}
-        whoLikedMe={whoLikedMe}
-        mutualMatches={mutualMatches}
+        likedMembers={serializedData.likedMembers}
+        whoLikedMe={serializedData.whoLikedMe}
+        mutualMatches={serializedData.mutualMatches}
       />
     </div>
   );

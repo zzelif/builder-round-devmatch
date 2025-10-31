@@ -131,7 +131,7 @@ export default function MemberCard({
               </div>
 
               {/* Skills/Tags (if you have them) */}
-              <div className="flex flex-wrap gap-2 mb-3">
+              {/* <div className="flex flex-wrap gap-2 mb-3">
                 <Badge variant="secondary" className="text-xs">
                   React
                 </Badge>
@@ -141,7 +141,7 @@ export default function MemberCard({
                 <Badge variant="secondary" className="text-xs">
                   Node.js
                 </Badge>
-              </div>
+              </div> */}
             </div>
 
             <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed">

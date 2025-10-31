@@ -1,3 +1,5 @@
+// src\actions\authActions.ts
+
 "use server";
 
 import { auth, signIn, signOut } from "@/auth";
@@ -52,9 +54,13 @@ export async function registerUser(
       return { status: "error", error: validated.error.issues };
     }
 
-    const { name, email, password, bio, age, profilePicture } = validated.data;
-
-    const imageUrl = null;
+    const {
+      email,
+      password,
+      profileImageUrl,
+      profileImagePublicId,
+      ...profileData
+    } = validated.data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -64,17 +70,41 @@ export async function registerUser(
 
     if (existingUser) return { status: "error", error: "User already exists" };
 
+    const genderMapping = {
+      male: "MALE",
+      female: "FEMALE",
+      "non-binary": "NON_BINARY",
+      "prefer-not-to-say": "PREFER_NOT_TO_SAY",
+    } as const;
+
     const user = await prisma.user.create({
       data: {
-        name,
+        name: profileData.name,
         email,
         passwordHash: hashedPassword,
+        image: profileImageUrl || null,
+        profileComplete: true,
         member: {
           create: {
-            name,
-            bio,
-            age,
-            image: imageUrl,
+            name: profileData.name,
+            bio: profileData.bio,
+            age: profileData.age,
+            dateOfBirth: profileData.dateOfBirth,
+            gender: genderMapping[profileData.gender],
+            city: profileData.city,
+            country: profileData.country,
+            image: profileImageUrl || null,
+            ...(profileImageUrl &&
+              profileImagePublicId && {
+                photos: {
+                  create: [
+                    {
+                      url: profileImageUrl,
+                      publicId: profileImagePublicId,
+                    },
+                  ],
+                },
+              }),
           },
         },
       },

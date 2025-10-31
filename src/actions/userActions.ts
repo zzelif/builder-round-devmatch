@@ -1,3 +1,5 @@
+// src\actions\userActions.ts
+
 "use server";
 
 import { ActionResult } from "@/types";
@@ -5,6 +7,7 @@ import { Member, Photo } from "@prisma/client";
 import { getAuthUserId } from "./authActions";
 import { prisma } from "@/lib/prisma";
 import { editSchema, EditSchema } from "@/lib/schemas/EditSchema";
+import { cloudinary } from "@/lib/cloudinary";
 
 export async function updateMemberProfile(
   data: EditSchema,
@@ -17,7 +20,7 @@ export async function updateMemberProfile(
     if (!validated.success)
       return { status: "error", error: validated.error.issues };
 
-    const { name, bio } = validated.data;
+    const { name, gender, city, country, bio } = validated.data;
 
     if (nameUpdated) {
       await prisma.user.update({
@@ -26,13 +29,24 @@ export async function updateMemberProfile(
       });
     }
 
+    const genderMapping = {
+      male: "MALE",
+      female: "FEMALE",
+      "non-binary": "NON_BINARY",
+      "prefer-not-to-say": "PREFER_NOT_TO_SAY",
+    } as const;
+
     const member = await prisma.member.update({
       where: { userId },
       data: {
         name,
+        gender: genderMapping[gender],
+        city,
+        country,
         bio,
       },
     });
+
     return { status: "success", data: member };
   } catch (error) {
     console.log(error);
@@ -55,6 +69,53 @@ export async function addImage(url: string, publicId: string) {
               publicId,
             },
           ],
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function setMainImage(photo: Photo) {
+  try {
+    const userId = await getAuthUserId();
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: { image: photo.url },
+    });
+
+    return prisma.member.update({
+      where: {
+        userId,
+      },
+      data: {
+        image: photo.url,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteImage(photo: Photo) {
+  try {
+    const userId = await getAuthUserId();
+
+    if (photo.publicId) {
+      await cloudinary.v2.uploader.destroy(photo.publicId);
+    }
+
+    return prisma.member.update({
+      where: { userId },
+      data: {
+        photos: {
+          delete: { id: photo.id },
         },
       },
     });

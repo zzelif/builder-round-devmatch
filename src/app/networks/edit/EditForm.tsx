@@ -2,10 +2,19 @@
 
 import { useEffect } from "react";
 import { Member } from "@prisma/client";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,10 +27,41 @@ type Props = {
   member: Member;
 };
 
+const dbToFormGender = (dbGender: string): EditSchema["gender"] => {
+  switch (dbGender) {
+    case "MALE":
+      return "male";
+    case "FEMALE":
+      return "female";
+    case "NON_BINARY":
+      return "non-binary";
+    case "PREFER_NOT_TO_SAY":
+      return "prefer-not-to-say";
+    default:
+      return "male";
+  }
+};
+
+const getGenderDisplayText = (genderValue: string): string => {
+  switch (genderValue) {
+    case "male":
+      return "Male";
+    case "female":
+      return "Female";
+    case "non-binary":
+      return "Non-binary";
+    case "prefer-not-to-say":
+      return "Prefer not to say";
+    default:
+      return "Select gender";
+  }
+};
+
 export default function EditForm({ member }: Props) {
   const router = useRouter();
   const {
     register,
+    control,
     handleSubmit,
     reset,
     setError,
@@ -35,8 +75,10 @@ export default function EditForm({ member }: Props) {
     if (member) {
       reset({
         name: member.name,
-        age: member.age,
+        gender: dbToFormGender(member.gender),
         bio: member.bio,
+        city: member.city,
+        country: member.country,
       });
     }
   }, [member, reset]);
@@ -74,20 +116,75 @@ export default function EditForm({ member }: Props) {
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="age">Age</FieldLabel>
-          <Input
-            id="age"
-            type="number"
-            {...register("age", { valueAsNumber: true })}
-            defaultValue={member.age}
-            className={cn(errors.age && "border-destructive")}
+          <FieldLabel>Gender</FieldLabel>
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger
+                  className={cn(errors.gender && "border-destructive")}
+                >
+                  <SelectValue
+                    placeholder={getGenderDisplayText(
+                      dbToFormGender(member.gender)
+                    )}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Genders</SelectLabel>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="non-binary">Non-binary</SelectItem>
+                    <SelectItem value="prefer-not-to-say">
+                      Prefer not to say
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
           />
-          {errors.age && (
+          {errors.gender && (
             <p className="text-sm text-destructive mt-1">
-              {errors.age.message}
+              {errors.gender.message}
             </p>
           )}
         </Field>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Field>
+            <FieldLabel htmlFor="city">City</FieldLabel>
+            <Input
+              id="city"
+              type="text"
+              defaultValue={member.city}
+              className={cn(errors.city && "border-destructive")}
+              {...register("city")}
+            />
+            {errors.city && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.city.message}
+              </p>
+            )}
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="country">Country</FieldLabel>
+            <Input
+              id="country"
+              type="text"
+              defaultValue={member.country}
+              className={cn(errors.country && "border-destructive")}
+              {...register("country")}
+            />
+            {errors.country && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.country.message}
+              </p>
+            )}
+          </Field>
+        </div>
 
         <Field>
           <FieldLabel htmlFor="bio">Short bio</FieldLabel>
@@ -107,10 +204,10 @@ export default function EditForm({ member }: Props) {
 
         <Button
           type="submit"
-          className="flex self-end"
-          disabled={!isValid || !isDirty}
+          className="flex self-end bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+          disabled={!isDirty || isSubmitting || !isValid}
         >
-          {isSubmitting ? "Updating..." : "Update Account"}
+          {isSubmitting ? "Updating..." : "Update Profile"}
         </Button>
       </FieldGroup>
     </form>

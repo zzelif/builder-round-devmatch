@@ -3,6 +3,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Member } from "@prisma/client";
+import { pusherServer } from "@/lib/pusher";
 
 export async function getUndiscoveredMembers(
   currentUserId: string
@@ -99,6 +100,12 @@ export async function recordSwipe(
           },
         },
       },
+    });
+
+    await pusherServer.trigger(`private-${targetUserId}`, "like:new", {
+      name: like.sourceMember.name,
+      image: like.sourceMember.image,
+      userId: like.sourceMember.userId,
     });
 
     const isMatch = await prisma.like.findUnique({

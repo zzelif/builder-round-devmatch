@@ -5,6 +5,7 @@ import {
 } from "@/actions/memberActions";
 import CardInnerWrapper from "@/components/CardInnerWrapper";
 import MemberPhotos from "@/components/MemberPhotos";
+import MemberPhotoUpload from "./MemberPhotoUpload";
 
 export default async function PhotosPage() {
   const userId = await getAuthUserId();
@@ -17,6 +18,7 @@ export default async function PhotosPage() {
       header="Edit Profile"
       body={
         <>
+          <MemberPhotoUpload />
           <MemberPhotos
             photos={photos}
             editing={true}

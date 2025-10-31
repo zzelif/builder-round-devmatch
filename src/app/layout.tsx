@@ -33,7 +33,7 @@ export default async function RootLayout({
       >
         <Providers>
           <TopNav session={session} />
-          <main className="container mx-auto">{children}</main>
+          <main className="mx-auto">{children}</main>
         </Providers>
       </body>
     </html>

@@ -1,24 +1,23 @@
 // src/app/networks/[userId]/page.tsx
 
 import { getMemberById } from "@/actions/memberActions";
-import { CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import CardInnerWrapper from "@/components/CardInnerWrapper";
 import { notFound } from "next/navigation";
 
 export default async function MemberDetailedPage({
   params,
 }: {
-  params: { userId: string };
+  params: Promise<{ userId: string }>;
 }) {
-  const member = await getMemberById(params.userId);
+  const resolvedParams = await params;
+  const member = await getMemberById(resolvedParams.userId);
 
   if (!member) return notFound;
 
   return (
-    <>
-      <CardHeader>Profile</CardHeader>
-      <Separator />
-      <CardContent>{member.bio}</CardContent>
-    </>
+    <CardInnerWrapper
+      header="Profile"
+      body={<div className="flex">{member.bio}</div>}
+    ></CardInnerWrapper>
   );
 }

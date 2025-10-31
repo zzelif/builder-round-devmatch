@@ -78,7 +78,7 @@ export default function MemberSidebar({ member, navLinks }: Props) {
           <div className="flex justify-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-1" />
-              Vancouver, BC
+              {member.city}, {member.country}
             </div>
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-1" />

@@ -32,6 +32,7 @@ interface TopNavClientProps {
 
 export default function TopNav({ session }: TopNavClientProps) {
   console.log("session in TopNavClient:", session);
+  console.log("Session user:", JSON.stringify(session?.user, null, 2));
   const pathname = usePathname();
 
   return (

@@ -21,7 +21,7 @@ export default async function Layout({
   const navLinks = [
     { name: "Profile", href: `${basePath}` },
     { name: "Photos", href: `${basePath}/photos` },
-    { name: "Message", href: `${basePath}/message` },
+    { name: "Message", href: `${basePath}/chat` },
   ];
 
   return (
