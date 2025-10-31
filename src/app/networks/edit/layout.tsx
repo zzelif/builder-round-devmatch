@@ -2,14 +2,16 @@ import React, { ReactNode } from "react";
 import { getMemberById } from "@/actions/memberActions";
 import { getAuthUserId } from "@/actions/authActions";
 import MemberSidebar from "../MemberSidebar";
-import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { redirect } from "next/navigation";
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const userId = await getAuthUserId();
 
   const member = await getMemberById(userId);
-  if (!member) return notFound;
+  if (!member) {
+    redirect("/register");
+  }
 
   const basePath = `/networks/edit`;
 

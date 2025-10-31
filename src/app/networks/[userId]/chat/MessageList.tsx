@@ -1,4 +1,4 @@
-// src/app/networks/[userId]/chat/MessageList.tsx - FIXED INFINITE LOOP
+// src/app/networks/[userId]/chat/MessageList.tsx
 "use client";
 
 import { MessageDto } from "@/types";
@@ -21,10 +21,8 @@ export default function MessageList({
   const [messages, setMessages] = useState(initialMessages.messages);
   const initializedRef = useRef(false);
 
-  // ✅ FIXED: Remove Zustand store usage that causes infinite loops
   useEffect(() => {
     if (!initializedRef.current) {
-      // Just mark read messages without store updates
       initializedRef.current = true;
     }
   }, []);

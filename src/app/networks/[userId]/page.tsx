@@ -2,7 +2,7 @@
 
 import { getMemberById } from "@/actions/memberActions";
 import CardInnerWrapper from "@/components/CardInnerWrapper";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function MemberDetailedPage({
   params,
@@ -12,7 +12,9 @@ export default async function MemberDetailedPage({
   const resolvedParams = await params;
   const member = await getMemberById(resolvedParams.userId);
 
-  if (!member) return notFound;
+  if (!member) {
+    redirect("/register");
+  }
 
   return (
     <CardInnerWrapper

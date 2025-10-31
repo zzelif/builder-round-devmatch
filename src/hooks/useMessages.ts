@@ -1,4 +1,4 @@
-// src/hooks/useMessages.ts - FIXED ALL ESLINT ISSUES
+// src/hooks/useMessages.ts
 "use client";
 
 import { MessageDto } from "@/types";
@@ -83,19 +83,18 @@ export function useMessages(
     [messages, isOutbox, router]
   );
 
-  // ✅ Fixed: Remove container from dependencies
   const loadMore = useCallback(async () => {
     if (loadingMore || !hasMore) return;
 
     setLoadingMore(true);
     try {
-      // Implement load more logic here
+      // other logic here
     } catch (error) {
       console.error("Error loading more messages:", error);
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasMore]); // ✅ Removed container dependency
+  }, [loadingMore, hasMore]);
 
   return {
     columns,

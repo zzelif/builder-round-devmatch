@@ -1,4 +1,4 @@
-// src/app/networks/[userId]/chat/MessageBox.tsx - FIXED SCROLL LOOP
+// src/app/networks/[userId]/chat/MessageBox.tsx
 "use client";
 
 import { MessageDto } from "@/types";

@@ -1,4 +1,4 @@
-// src/hooks/useMessageStore.ts - FIXED SERVER SNAPSHOT CACHING
+// src/hooks/useMessageStore.ts
 import { create } from "zustand";
 
 interface MessageState {
@@ -7,7 +7,6 @@ interface MessageState {
   resetMessages: () => void;
 }
 
-// ✅ Cache server snapshot to prevent infinite loops
 const serverSnapshot = JSON.stringify({ unreadCount: 0 });
 
 export const useMessageStore = create<MessageState>((set) => ({
@@ -20,5 +19,4 @@ export const useMessageStore = create<MessageState>((set) => ({
   resetMessages: () => set({ unreadCount: 0 }),
 }));
 
-// ✅ Export cached server snapshot function
 export const getServerSnapshot = () => serverSnapshot;
