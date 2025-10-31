@@ -22,7 +22,7 @@ import Menu from "./Menu";
 
 const navigationLinks = [
   { href: "/networks", label: "Networks", icon: HouseIcon },
-  { href: "/collab", label: "Collab", icon: InboxIcon },
+  { href: "/messages", label: "Collab", icon: InboxIcon },
   { href: "/lists", label: "Lists", icon: Users },
 ];
 
