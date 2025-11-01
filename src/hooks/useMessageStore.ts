@@ -1,22 +1,32 @@
 // src/hooks/useMessageStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface MessageState {
+export type MessageState = {
   unreadCount: number;
+};
+
+export type MessageActions = {
   updateUnreadCount: (amount: number) => void;
+  setUnreadCount: (count: number) => void;
   resetMessages: () => void;
-}
+};
 
-const serverSnapshot = JSON.stringify({ unreadCount: 0 });
+export type MessageStore = MessageState & MessageActions;
 
-export const useMessageStore = create<MessageState>((set) => ({
-  unreadCount: 0,
-  updateUnreadCount: (amount: number) => {
-    set((state) => ({
-      unreadCount: Math.max(0, state.unreadCount + amount),
-    }));
-  },
-  resetMessages: () => set({ unreadCount: 0 }),
-}));
-
-export const getServerSnapshot = () => serverSnapshot;
+export const useMessageStore = create<MessageStore>()(
+  persist(
+    (set) => ({
+      unreadCount: 0,
+      updateUnreadCount: (amount: number) =>
+        set((state) => ({
+          unreadCount: Math.max(0, state.unreadCount + amount),
+        })),
+      setUnreadCount: (count: number) => set({ unreadCount: count }),
+      resetMessages: () => set({ unreadCount: 0 }),
+    }),
+    {
+      name: "message-store",
+    }
+  )
+);

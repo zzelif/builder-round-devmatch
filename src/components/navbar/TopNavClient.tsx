@@ -1,29 +1,27 @@
-// src\components\navbar\TopNavClient.tsx
+// src/components/navbar/TopNavClient.tsx
 "use client";
 
-import { HouseIcon, InboxIcon, Users } from "lucide-react";
+import { MessageCircle, Users, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Session } from "next-auth";
+import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/navbar/logo";
 import { Button } from "@/components/ui/button";
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Link from "next/link";
 import Menu from "./Menu";
+// import { Badge } from "@/components/ui/badge";
 
 const navigationLinks = [
-  { href: "/networks", label: "Networks", icon: HouseIcon },
-  { href: "/messages", label: "Collab", icon: InboxIcon },
-  { href: "/lists", label: "Lists", icon: Users },
+  { href: "/networks", label: "Discover", icon: Sparkles },
+  { href: "/messages", label: "Messages", icon: MessageCircle },
+  { href: "/lists", label: "Connections", icon: Users },
 ];
 
 interface TopNavClientProps {
@@ -31,125 +29,172 @@ interface TopNavClientProps {
 }
 
 export default function TopNav({ session }: TopNavClientProps) {
-  console.log("session in TopNavClient:", session);
-  console.log("Session user:", JSON.stringify(session?.user, null, 2));
   const pathname = usePathname();
 
   return (
-    <header className="border-b px-4 md:px-6">
-      <div className="flex h-16 items-center justify-between gap-4">
-        <div className="flex flex-1 items-center gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                className="group size-8 md:hidden"
-                variant="ghost"
-                size="icon"
-              >
-                <svg
-                  className="pointer-events-none"
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 12L20 12"
-                    className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-315"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
-                  />
-                  <path
-                    d="M4 12H20"
-                    className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-135"
-                  />
-                </svg>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
-              <NavigationMenu className="max-w-none *:w-full">
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link, index) => {
-                    const Icon = link.icon;
-                    return (
-                      <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink
+    <header className="sticky top-0 z-50 w-full glass border-b border-border/40 backdrop-blur-xl supports-backdrop-filter:bg-background/60">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex h-16 items-center justify-between">
+          {/* Left Section - Logo & Mobile Menu */}
+          <div className="flex items-center gap-4">
+            {/* Mobile Menu */}
+            {session && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden hover:bg-primary/10"
+                  >
+                    <svg
+                      width={20}
+                      height={20}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 12L20 12" />
+                      <path d="M4 6H20" />
+                      <path d="M4 18H20" />
+                    </svg>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-72">
+                  <SheetHeader>
+                    <SheetTitle className="text-left">
+                      <Logo />
+                    </SheetTitle>
+                  </SheetHeader>
+                  <nav className="mt-8 flex flex-col gap-2">
+                    {navigationLinks.map((link) => {
+                      const Icon = link.icon;
+                      const isActive = pathname === link.href;
+                      return (
+                        <Link
+                          key={link.href}
                           href={link.href}
-                          className="flex-row items-center gap-2 py-1.5"
-                          active={pathname === link.href}
+                          className={`
+                            flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                            ${
+                              isActive
+                                ? "bg-primary/10 text-primary font-semibold"
+                                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                            }
+                          `}
                         >
-                          <Icon
-                            size={16}
-                            className="text-muted-foreground/80"
-                            aria-hidden="true"
-                          />
+                          <Icon className="w-5 h-5" />
                           <span>{link.label}</span>
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
-                    );
-                  })}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </PopoverContent>
-          </Popover>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            )}
 
-          <div className="flex items-center">
+            {/* Logo */}
             <Link
-              title="logo"
               href="/"
-              className="text-primary hover:text-primary/90"
+              className="flex items-center gap-2 text-primary hover:text-primary/90 transition-colors group"
             >
-              <Logo />
+              <motion.div
+                whileHover={{ rotate: 10, scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <Logo />
+              </motion.div>
+              <span className="font-bold text-lg hidden sm:inline-block text-foreground group-hover:text-primary transition-colors">
+                DevMatch
+              </span>
             </Link>
           </div>
-        </div>
 
-        {session && (
-          <NavigationMenu className="max-md:hidden">
-            <NavigationMenuList className="gap-2">
-              {navigationLinks.map((link, index) => {
+          {/* Center Section - Desktop Navigation */}
+          {session && (
+            <nav className="hidden md:flex items-center gap-1">
+              {navigationLinks.map((link) => {
                 const Icon = link.icon;
+                const isActive = pathname === link.href;
                 return (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      active={pathname === link.href}
-                      href={link.href}
-                      className="flex-row items-center gap-2 py-1.5 font-medium text-foreground hover:text-primary"
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="relative px-4 py-2 rounded-lg transition-all duration-200"
+                  >
+                    <motion.div
+                      className="flex items-center gap-2"
+                      whileHover={{ y: -2 }}
+                      transition={{ type: "spring", stiffness: 400 }}
                     >
                       <Icon
-                        size={16}
-                        className="text-muted-foreground/80"
-                        aria-hidden="true"
+                        className={`w-4 h-4 transition-colors ${
+                          isActive ? "text-primary" : "text-muted-foreground"
+                        }`}
                       />
-                      <span>{link.label}</span>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                      <span
+                        className={`font-medium text-sm transition-colors ${
+                          isActive
+                            ? "text-primary"
+                            : "text-foreground hover:text-primary"
+                        }`}
+                      >
+                        {link.label}
+                      </span>
+                    </motion.div>
+
+                    {/* Active indicator */}
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          layoutId="active-pill"
+                          className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                    </AnimatePresence>
+                  </Link>
                 );
               })}
-            </NavigationMenuList>
-          </NavigationMenu>
-        )}
-
-        <div className="flex flex-1 items-center justify-end gap-2">
-          {session?.user ? (
-            <Menu user={session.user} />
-          ) : (
-            <>
-              <Button asChild variant="ghost" size="sm" className="text-sm">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild size="sm" className="text-sm">
-                <Link href="/register">Register</Link>
-              </Button>
-            </>
+            </nav>
           )}
+
+          {/* Right Section - Auth Buttons / User Menu */}
+          <div className="flex items-center gap-3">
+            {session?.user ? (
+              <Menu user={session.user} />
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm hover:bg-primary/10"
+                >
+                  <Link href="/login">Sign In</Link>
+                </Button>
+                <Button
+                  asChild
+                  size="sm"
+                  className="text-sm gradient-primary shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <Link href="/register">
+                    <Sparkles className="w-4 h-4 mr-1" />
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

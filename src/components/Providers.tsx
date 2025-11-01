@@ -1,15 +1,36 @@
+// src/components/Providers.tsx
+"use client";
+
 import React, { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
-// import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import NotificationProvider from "./NotificationProvider";
+import "react-toastify/dist/ReactToastify.css";
+import { Session } from "next-auth";
 
-export default function Providers({ children }: { children: ReactNode }) {
+interface ProvidersProps {
+  children: ReactNode;
+  session: Session | null;
+}
+
+export default function Providers({ children, session }: ProvidersProps) {
   return (
-    <>
-      <ToastContainer position="bottom-right" hideProgressBar />
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <NotificationProvider session={session}>
+        <ToastContainer
+          position="bottom-right"
+          hideProgressBar
+          closeOnClick
+          pauseOnHover
+          theme="dark"
+        />
+      </NotificationProvider>
       {children}
-    </>
-    // <SessionProvider>
-
-    // </SessionProvider>
+    </ThemeProvider>
   );
 }

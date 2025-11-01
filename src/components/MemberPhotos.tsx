@@ -1,4 +1,4 @@
-// src/components/MemberPhotos.tsx - FIXED TYPESCRIPT ISSUES
+// src/components/MemberPhotos.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "react-toastify";
-// import { FaImage } from "react-icons/fa";
 
 type Props = {
   photos: Photo[] | null;

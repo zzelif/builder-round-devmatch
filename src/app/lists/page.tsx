@@ -1,5 +1,5 @@
 // src/app/lists/page.tsx
-import React from "react";
+
 import ListsTab from "./ListsTab";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -14,7 +14,6 @@ export default async function ListPage() {
 
   const userId = session.user.id;
 
-  // Fetch all data in parallel for better performance
   const [likedMembers, whoLikedMe, mutualMatches] = await Promise.all([
     fetchLikedMembers(userId, "source"),
     fetchLikedMembers(userId, "target"),
@@ -34,6 +33,7 @@ export default async function ListPage() {
         likedMembers={serializedData.likedMembers}
         whoLikedMe={serializedData.whoLikedMe}
         mutualMatches={serializedData.mutualMatches}
+        currentUserId={userId}
       />
     </div>
   );

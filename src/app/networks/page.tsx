@@ -14,7 +14,7 @@ export default async function networksPage() {
 
   const members = await getUndiscoveredMembers(session.user.id);
   return (
-    <div className="min-h-screen bg-linear-to-br from-pink-50 to-blue-50 p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-md mx-auto pt-8">
         <SwipeInterface
           initialMembers={members}

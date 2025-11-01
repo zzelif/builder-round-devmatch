@@ -1,3 +1,5 @@
+// src\app\api\pusher-auth\route.ts
+
 import { auth } from "@/auth";
 import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";

@@ -16,7 +16,11 @@ export default async function EditPage() {
   return (
     <CardInnerWrapper
       header="Edit Profile"
-      body={<EditForm member={member} />}
+      body={
+        <div className="p-5">
+          <EditForm member={member} />
+        </div>
+      }
     />
   );
 }

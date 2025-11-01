@@ -82,12 +82,12 @@ export default function SwipeInterface({
           className="text-center max-w-md mx-auto"
         >
           <div className="w-24 h-24 bg-linear-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Heart className="w-12 h-12 text-indigo-500" />
+            <Heart className="w-12 h-12 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+          <h2 className="text-2xl font-bold text-muted-foreground mb-3">
             You&apos;re all caught up!
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-muted-foreground dark:text-gray-400 mb-6">
             No more developers in your area. Check back later for new profiles!
           </p>
           <Button

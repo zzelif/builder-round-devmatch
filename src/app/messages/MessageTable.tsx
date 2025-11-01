@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { memo } from "react";
+import { memo } from "react";
 import MessageTableCell from "./MessageTableCell";
 import { useMessages } from "@/hooks/useMessages";
 import { Loader2 } from "lucide-react";
@@ -28,7 +28,6 @@ type Column = {
   width?: string;
 };
 
-// ✅ Memoize the component to prevent unnecessary re-renders
 export default memo(function MessageTable({
   initialMessages,
   nextCursor,
@@ -48,12 +47,18 @@ export default memo(function MessageTable({
   return (
     <div className="flex flex-col h-[80vh]">
       <Card className="flex flex-col h-full">
-        <CardContent className="flex-1 overflow-auto p-0">
-          <Table>
+        <CardContent className="flex-1 overflow-auto pt-0 px-5">
+          <Table className="table-fixed">
             <TableHeader>
               <TableRow>
                 {columns.map((column: Column) => (
-                  <TableHead key={column.key} style={{ width: column.width }}>
+                  <TableHead
+                    key={column.key}
+                    className="text-left"
+                    style={{
+                      width: column.width || "auto",
+                    }}
+                  >
                     {column.label}
                   </TableHead>
                 ))}
@@ -74,7 +79,16 @@ export default memo(function MessageTable({
                   <TableRow
                     key={item.id}
                     className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => selectRow(item.id)}
+                    onClick={(e) => {
+                      // Prevent default
+                      const target = e.target as HTMLElement;
+                      if (
+                        !target.closest("button") &&
+                        !target.closest('[role="dialog"]')
+                      ) {
+                        selectRow(item.id);
+                      }
+                    }}
                   >
                     {columns.map((column: Column) => (
                       <TableCell

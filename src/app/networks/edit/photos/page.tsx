@@ -1,3 +1,5 @@
+// src\app\networks\edit\photos\page.tsx
+
 import { getAuthUserId } from "@/actions/authActions";
 import {
   getMemberById,

@@ -1,4 +1,4 @@
-// src/actions/likeActions.ts (NEW FILE - following reference pattern)
+// src/actions/likeActions.ts
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -53,22 +53,6 @@ export async function recordSwipe(
   isLike: boolean
 ) {
   try {
-    // Only likes
-    //     if (isLike) {
-    //       await prisma.like.create({
-    //         data: {
-    //           sourceUserId,
-    //           targetUserId,
-    //         },
-    //       });
-    //     }
-
-    //     return { success: true };
-    //   } catch (error) {
-    //     console.error("Error recording swipe:", error);
-    //     return { success: false, error: "Failed to record swipe" };
-    //   }
-
     if (!isLike) {
       return { success: true, isMatch: false };
     }
@@ -166,6 +150,86 @@ export async function fetchLikedMembers(
   } catch (error) {
     console.error("Error fetching liked members:", error);
     return [];
+  }
+}
+
+export async function checkMutualMatch(
+  currentUserId: string,
+  targetUserId: string
+): Promise<boolean> {
+  try {
+    const currentUserLiked = await prisma.like.findUnique({
+      where: {
+        sourceUserId_targetUserId: {
+          sourceUserId: currentUserId,
+          targetUserId: targetUserId,
+        },
+      },
+    });
+
+    if (!currentUserLiked) return false;
+
+    const targetUserLiked = await prisma.like.findUnique({
+      where: {
+        sourceUserId_targetUserId: {
+          sourceUserId: targetUserId,
+          targetUserId: currentUserId,
+        },
+      },
+    });
+
+    return !!targetUserLiked;
+  } catch (error) {
+    console.error("Error checking mutual match:", error);
+    return false;
+  }
+}
+
+export async function unlikeMember(sourceUserId: string, targetUserId: string) {
+  try {
+    await prisma.like.delete({
+      where: {
+        sourceUserId_targetUserId: {
+          sourceUserId,
+          targetUserId,
+        },
+      },
+    });
+
+    return { success: true, message: "Unliked successfully" };
+  } catch (error) {
+    console.error("Error unliking member:", error);
+    return { success: false, error: "Failed to unlike member" };
+  }
+}
+
+export async function unmatchMember(
+  currentUserId: string,
+  targetUserId: string
+) {
+  try {
+    // Delete both likes to completely unmatch
+    await prisma.$transaction([
+      prisma.like.deleteMany({
+        where: {
+          OR: [
+            {
+              sourceUserId: currentUserId,
+              targetUserId: targetUserId,
+            },
+            {
+              sourceUserId: targetUserId,
+              targetUserId: currentUserId,
+            },
+          ],
+        },
+      }),
+    ]);
+
+    return { success: true, message: "Unmatched successfully" };
+  } catch (error) {
+    console.error("Error unmatching member:", error);
+    return { success: false, error: "Failed to unmatch" };
   }
 }
 

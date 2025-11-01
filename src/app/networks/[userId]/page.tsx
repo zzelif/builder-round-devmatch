@@ -19,7 +19,7 @@ export default async function MemberDetailedPage({
   return (
     <CardInnerWrapper
       header="Profile"
-      body={<div className="flex">{member.bio}</div>}
+      body={<div className="flex p-5">{member.bio}</div>}
     ></CardInnerWrapper>
   );
 }

@@ -19,13 +19,24 @@ export default function MessageList({
   chatId,
 }: Props) {
   const [messages, setMessages] = useState(initialMessages.messages);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const initializedRef = useRef(false);
+
+  // Auto-scroll to bottom when new messages arrive
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (!initializedRef.current) {
       initializedRef.current = true;
+      scrollToBottom();
     }
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleNewMessage = useCallback((message: MessageDto) => {
     setMessages((prevState) => [...prevState, message]);
@@ -56,26 +67,32 @@ export default function MessageList({
   }, [chatId, handleNewMessage, handleReadMessages]);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            <div className="text-center">
-              <div className="text-6xl mb-4">💬</div>
-              <div className="text-xl font-semibold mb-2">No messages yet</div>
-              <div className="text-sm">Start the conversation!</div>
+    <div className="flex flex-col h-full overflow-hidden">
+      {messages.length === 0 ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <div className="text-6xl mb-4">💬</div>
+            <div className="text-xl font-semibold text-foreground mb-2">
+              No messages yet
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Start the conversation!
             </div>
           </div>
-        ) : (
-          messages.map((message) => (
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          {messages.map((message) => (
             <MessageBox
               key={message.id}
               message={message}
               currentUserId={currentUserId}
             />
-          ))
-        )}
-      </div>
+          ))}
+          {/* Invisible element for scrolling to bottom */}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
     </div>
   );
 }

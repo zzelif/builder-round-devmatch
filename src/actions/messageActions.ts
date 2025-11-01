@@ -8,6 +8,25 @@ import { mapMessageToMessageDto } from "@/lib/mappings";
 import { pusherServer } from "@/lib/pusher";
 import { createChatId } from "@/lib/utils";
 
+export async function syncUnreadMessages() {
+  try {
+    const userId = await getAuthUserId();
+
+    if (!userId) return 0;
+
+    return await prisma.message.count({
+      where: {
+        recipientId: userId,
+        dateRead: null,
+        recipientDeleted: false,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+}
+
 export async function createMessage(
   recipientUserId: string,
   data: MessageSchema
@@ -146,18 +165,30 @@ export async function getMessagesByContainer(
       take: limit + 1,
     });
 
+    const conversationMap = new Map();
+
+    messages.forEach((msg) => {
+      const otherUserId =
+        container === "outbox" ? msg.recipient?.userId : msg.sender?.userId;
+
+      // Only keep the latest message with each person
+      if (!conversationMap.has(otherUserId)) {
+        conversationMap.set(otherUserId, msg);
+      }
+    });
+
+    const uniqueMessages = Array.from(conversationMap.values());
+
     let nextCursor: string | undefined;
 
-    if (messages.length > limit) {
-      const nextItem = messages.pop();
+    if (uniqueMessages.length > limit) {
+      const nextItem = uniqueMessages[limit];
       nextCursor = nextItem?.created.toISOString();
-    } else {
-      nextCursor = undefined;
     }
 
-    const messagesToReturn = messages.map((message) =>
-      mapMessageToMessageDto(message)
-    );
+    const messagesToReturn = uniqueMessages
+      .slice(0, limit)
+      .map((message) => mapMessageToMessageDto(message));
 
     return { messages: messagesToReturn, nextCursor };
   } catch (error) {

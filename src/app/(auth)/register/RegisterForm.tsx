@@ -1,4 +1,3 @@
-// src/app/(auth)/register/RegisterForm.tsx - FIXED RESOLVER TYPE
 "use client";
 
 import { useState } from "react";
@@ -15,18 +14,22 @@ import {
 import { cn } from "@/lib/utils";
 import { registerUser } from "@/actions/authActions";
 import {
-  combinedRegisterSchema,
+  userDetailsSchema,
+  profileDetailsSchema,
   RegisterSchema,
 } from "@/lib/schemas/RegisterSchema";
 import UserDetailsStep from "./UserDetailsStep";
 import ProfileDetailsStep from "./ProfileDetailsStep";
 
+const stepSchemas = [userDetailsSchema, profileDetailsSchema];
+
 export default function RegisterForm() {
   const [step, setStep] = useState(0);
+  const currentStepSchema = stepSchemas[step];
   const router = useRouter();
 
   const registerFormMethods = useForm<RegisterSchema>({
-    resolver: zodResolver(combinedRegisterSchema),
+    resolver: zodResolver(currentStepSchema),
     mode: "onTouched",
   });
 
@@ -34,31 +37,11 @@ export default function RegisterForm() {
     handleSubmit,
     getValues,
     setError,
-    trigger,
     formState: { errors },
   } = registerFormMethods;
 
   const onNext = async () => {
-    // ✅ Validate current step
-    const currentStepFields =
-      step === 0
-        ? (["email", "password", "confirmPassword"] as const)
-        : ([
-            "name",
-            "age",
-            "gender",
-            "dateOfBirth",
-            "city",
-            "country",
-            "bio",
-          ] as const);
-
-    const isStepValid = await trigger(currentStepFields);
-
-    if (!isStepValid) return;
-
-    if (step === 1) {
-      // Last step
+    if (step === stepSchemas.length - 1) {
       const formData = getValues();
       const result = await registerUser(formData);
 
@@ -87,7 +70,7 @@ export default function RegisterForm() {
         </CardDescription>
 
         <div className="flex justify-center gap-2 mt-4">
-          {[0, 1].map((index) => (
+          {stepSchemas.map((_, index) => (
             <div
               key={index}
               className={cn(

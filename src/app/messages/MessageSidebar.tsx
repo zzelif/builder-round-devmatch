@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { GoInbox } from "react-icons/go";
-import { MdOutlineOutbox } from "react-icons/md";
+import { Inbox, Send } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function MessageSidebar() {
   const searchParams = useSearchParams();
@@ -17,18 +17,8 @@ export default function MessageSidebar() {
   );
 
   const items = [
-    {
-      key: "inbox",
-      label: "Inbox",
-      icon: GoInbox,
-      chip: true,
-    },
-    {
-      key: "outbox",
-      label: "Outbox",
-      icon: MdOutlineOutbox,
-      chip: false,
-    },
+    { key: "inbox", label: "Inbox", icon: Inbox, chip: true },
+    { key: "outbox", label: "Outbox", icon: Send, chip: false },
   ];
 
   const handleSelect = (key: string) => {
@@ -38,33 +28,37 @@ export default function MessageSidebar() {
     router.replace(`${pathname}?${params}`);
   };
 
-  // FIX: Select only the specific value, not an object
   const unreadCount = useMessageStore((state) => state.unreadCount);
 
   return (
-    <div className="flex flex-col shadow-md rounded-lg cursor-pointer">
-      {items.map(({ key, icon: Icon, label, chip }) => (
-        <div
-          key={key}
-          className={cn(
-            "flex flex-row items-center rounded-t-lg gap-2 p-3 transition-colors",
-            selected === key
-              ? "text-primary font-semibold bg-primary/10"
-              : "text-foreground hover:bg-accent hover:text-accent-foreground"
-          )}
-          onClick={() => handleSelect(key)}
-        >
-          <Icon size={24} />
-          <div className="flex justify-between grow items-center">
-            <span>{label}</span>
-            {chip && unreadCount > 0 && (
-              <Badge variant="default" className="ml-auto">
-                {unreadCount}
-              </Badge>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
+    <Card className="shadow-lg border-border/50">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">Messages</CardTitle>
+      </CardHeader>
+      <CardContent className="p-2">
+        <nav className="flex flex-col gap-1">
+          {items.map(({ key, icon: Icon, label, chip }) => (
+            <button
+              key={key}
+              className={cn(
+                "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 text-left",
+                selected === key
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+              onClick={() => handleSelect(key)}
+            >
+              <Icon className="w-4 h-4" />
+              <span className="text-sm font-medium flex-1">{label}</span>
+              {chip && unreadCount > 0 && (
+                <Badge variant="default" className="ml-auto text-xs px-2">
+                  {unreadCount}
+                </Badge>
+              )}
+            </button>
+          ))}
+        </nav>
+      </CardContent>
+    </Card>
   );
 }

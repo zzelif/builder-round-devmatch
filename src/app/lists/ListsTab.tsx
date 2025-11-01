@@ -5,6 +5,17 @@ import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Member } from "@prisma/client";
 import {
   Heart,
@@ -13,29 +24,42 @@ import {
   MessageCircle,
   Eye,
   CheckCircle2,
+  HeartOff,
+  UserX,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  unlikeMember,
+  unmatchMember,
+  recordSwipe,
+} from "@/actions/likeActions";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {
   likedMembers: Member[];
   whoLikedMe: Member[];
   mutualMatches: Member[];
+  currentUserId: string;
 };
 
 export default function ListsTab({
   likedMembers,
   whoLikedMe,
   mutualMatches,
+  currentUserId,
 }: Props) {
   return (
     <div className="container mx-auto p-6 max-w-6xl">
+      {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           Your Connections
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-muted-foreground">
           Manage your likes, matches, and connections with fellow developers
         </p>
       </div>
@@ -44,73 +68,80 @@ export default function ListsTab({
         <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted/50 p-1 rounded-xl">
           <TabsTrigger
             value="mutual"
-            className="flex items-center gap-2 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             <Heart className="w-4 h-4" />
             <span className="hidden sm:inline">Matches</span>
             {mutualMatches.length > 0 && (
-              <Badge className="bg-green-500 text-white ml-1 px-1.5 py-0.5 text-xs">
+              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
                 {mutualMatches.length}
               </Badge>
             )}
           </TabsTrigger>
           <TabsTrigger
             value="likes"
-            className="flex items-center gap-2 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             <HeartHandshake className="w-4 h-4" />
             <span className="hidden sm:inline">Like Me</span>
             {whoLikedMe.length > 0 && (
-              <Badge className="bg-orange-500 text-white ml-1 px-1.5 py-0.5 text-xs">
+              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
                 {whoLikedMe.length}
               </Badge>
             )}
           </TabsTrigger>
           <TabsTrigger
             value="liked"
-            className="flex items-center gap-2 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
             <Users className="w-4 h-4" />
             <span className="hidden sm:inline">My Likes</span>
             {likedMembers.length > 0 && (
-              <Badge className="bg-indigo-500 text-white ml-1 px-1.5 py-0.5 text-xs">
+              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
                 {likedMembers.length}
               </Badge>
             )}
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent
-          value="mutual"
-          className="animate-in fade-in-0 duration-300"
-        >
-          <MutualMatchesGrid members={mutualMatches} />
+        <TabsContent value="mutual" className="animate-fade-in">
+          <MutualMatchesGrid
+            members={mutualMatches}
+            currentUserId={currentUserId}
+          />
         </TabsContent>
 
-        <TabsContent
-          value="likes"
-          className="animate-in fade-in-0 duration-300"
-        >
-          <WhoLikedMeGrid members={whoLikedMe} mutualMatches={mutualMatches} />
+        <TabsContent value="likes" className="animate-fade-in">
+          <WhoLikedMeGrid
+            members={whoLikedMe}
+            mutualMatches={mutualMatches}
+            currentUserId={currentUserId}
+          />
         </TabsContent>
 
-        <TabsContent
-          value="liked"
-          className="animate-in fade-in-0 duration-300"
-        >
-          <LikedMembersGrid members={likedMembers} />
+        <TabsContent value="liked" className="animate-fade-in">
+          <LikedMembersGrid
+            members={likedMembers}
+            currentUserId={currentUserId}
+          />
         </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-// Mutual Matches Component
-function MutualMatchesGrid({ members }: { members: Member[] }) {
+// Grid Components
+function MutualMatchesGrid({
+  members,
+  currentUserId,
+}: {
+  members: Member[];
+  currentUserId: string;
+}) {
   if (members.length === 0) {
     return (
       <EmptyState
-        icon={<Heart className="w-16 h-16 text-indigo-400" />}
+        icon={<Heart className="w-16 h-16 text-primary" />}
         title="No matches yet"
         description="Keep swiping to find your perfect developer match!"
         actionText="Start Swiping"
@@ -128,7 +159,11 @@ function MutualMatchesGrid({ members }: { members: Member[] }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
         >
-          <MemberMatchCard member={member} type="match" />
+          <MemberMatchCard
+            member={member}
+            type="match"
+            currentUserId={currentUserId}
+          />
         </motion.div>
       ))}
     </div>
@@ -138,14 +173,16 @@ function MutualMatchesGrid({ members }: { members: Member[] }) {
 function WhoLikedMeGrid({
   members,
   mutualMatches,
+  currentUserId,
 }: {
   members: Member[];
   mutualMatches: Member[];
+  currentUserId: string;
 }) {
   if (members.length === 0) {
     return (
       <EmptyState
-        icon={<HeartHandshake className="w-16 h-16 text-orange-400" />}
+        icon={<HeartHandshake className="w-16 h-16 text-warning" />}
         title="No one has liked you yet"
         description="Don't worry! Your profile is being discovered by amazing developers."
         actionText="Improve Profile"
@@ -172,6 +209,7 @@ function WhoLikedMeGrid({
               member={member}
               type="liked-me"
               isMutualMatch={isMutualMatch}
+              currentUserId={currentUserId}
             />
           </motion.div>
         );
@@ -180,12 +218,17 @@ function WhoLikedMeGrid({
   );
 }
 
-// My Likes Component
-function LikedMembersGrid({ members }: { members: Member[] }) {
+function LikedMembersGrid({
+  members,
+  currentUserId,
+}: {
+  members: Member[];
+  currentUserId: string;
+}) {
   if (members.length === 0) {
     return (
       <EmptyState
-        icon={<Users className="w-16 h-16 text-indigo-400" />}
+        icon={<Users className="w-16 h-16 text-primary" />}
         title="You haven't liked anyone yet"
         description="Start swiping to discover amazing developers in your area!"
         actionText="Start Discovering"
@@ -203,48 +246,125 @@ function LikedMembersGrid({ members }: { members: Member[] }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
         >
-          <MemberMatchCard member={member} type="liked" />
+          <MemberMatchCard
+            member={member}
+            type="liked"
+            currentUserId={currentUserId}
+          />
         </motion.div>
       ))}
     </div>
   );
 }
 
-// ✅ ENHANCED: Member Card with mutual detection
+// Member Card Component
 function MemberMatchCard({
   member,
   type,
   isMutualMatch = false,
+  currentUserId,
 }: {
   member: Member;
   type: "match" | "liked-me" | "liked";
   isMutualMatch?: boolean;
+  currentUserId: string;
 }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLike = async () => {
+    setIsLoading(true);
+    try {
+      const result = await recordSwipe(currentUserId, member.userId, true);
+      if (result.success) {
+        toast.success(
+          `IT'S A MATCH! You and ${member.name} liked each other!`,
+          {
+            position: "top-center",
+            autoClose: 4000,
+            closeOnClick: true,
+            className: "match-toast",
+          }
+        );
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to like");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log("error:::", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUnlike = async () => {
+    setIsLoading(true);
+    try {
+      const result = await unlikeMember(currentUserId, member.userId);
+      if (result.success) {
+        toast.success(`Unliked ${member.name}`);
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to unlike");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log("error:::", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUnmatch = async () => {
+    setIsLoading(true);
+    try {
+      const result = await unmatchMember(currentUserId, member.userId);
+      if (result.success) {
+        toast.success(`Unmatched with ${member.name}`);
+        router.refresh();
+      } else {
+        toast.error(result.error || "Failed to unmatch");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log("error:::", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getCardStyle = () => {
     switch (type) {
       case "match":
-        return "border-green-200 hover:border-green-400 hover:shadow-lg hover:shadow-green-100";
+        return "border-success/30 hover:border-success hover:shadow-lg transition-all";
       case "liked-me":
         return isMutualMatch
-          ? "border-green-200 hover:border-green-400 hover:shadow-lg hover:shadow-green-100"
-          : "border-orange-200 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-100";
+          ? "border-success/30 hover:border-success hover:shadow-lg transition-all"
+          : "border-warning/30 hover:border-warning hover:shadow-lg transition-all";
       case "liked":
-        return "border-indigo-200 hover:border-indigo-400 hover:shadow-lg hover:shadow-indigo-100";
+        return "border-primary/30 hover:border-primary hover:shadow-lg transition-all";
     }
   };
 
   const getBadge = () => {
     switch (type) {
       case "match":
-        return <Badge className="bg-green-500 text-white">💕 Match</Badge>;
+        return (
+          <Badge className="bg-success text-success-foreground">💕 Match</Badge>
+        );
       case "liked-me":
         return isMutualMatch ? (
-          <Badge className="bg-green-500 text-white">💕 Mutual</Badge>
+          <Badge className="bg-success text-success-foreground">Mutual</Badge>
         ) : (
-          <Badge className="bg-orange-500 text-white">💖 Likes You</Badge>
+          <Badge className="bg-warning text-warning-foreground">
+            Likes You
+          </Badge>
         );
       case "liked":
-        return <Badge className="bg-indigo-500 text-white">💝 Liked</Badge>;
+        return (
+          <Badge className="bg-primary text-primary-foreground">Liked</Badge>
+        );
     }
   };
 
@@ -252,43 +372,81 @@ function MemberMatchCard({
     switch (type) {
       case "match":
         return (
-          <div className="flex gap-2">
-            <Button
-              asChild
-              size="sm"
-              className="flex-1 bg-linear-to-r from-green-500 to-emerald-500"
-            >
-              <Link href={`/networks/${member.userId}/chat`}>
-                <MessageCircle className="w-4 h-4 mr-1" />
-                Message
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/networks/${member.userId}`}>
-                <Eye className="w-4 h-4" />
-              </Link>
-            </Button>
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Button asChild size="sm" className="flex-1 gradient-success">
+                <Link href={`/networks/${member.userId}/chat`}>
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  Message
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/networks/${member.userId}`}>
+                  <Eye className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                  disabled={isLoading}
+                >
+                  <UserX className="w-4 h-4 mr-1" />
+                  Unmatch
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Unmatch {member.name}?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will remove your match with {member.name}. You
+                    won&apos;t be able to message them anymore. This action
+                    cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleUnmatch}
+                    className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                  >
+                    Unmatch
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         );
+
       case "liked-me":
         return (
           <div className="flex flex-col gap-2">
             {isMutualMatch ? (
-              <div className="flex items-center justify-center gap-2 text-green-500 text-sm font-medium">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>You liked each other!</span>
-              </div>
+              <>
+                <div className="flex items-center justify-center gap-2 text-success text-sm font-medium py-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>You liked each other!</span>
+                </div>
+                <Button asChild size="sm" className="w-full gradient-success">
+                  <Link href={`/networks/${member.userId}/chat`}>
+                    <MessageCircle className="w-4 h-4 mr-1" />
+                    Message
+                  </Link>
+                </Button>
+              </>
             ) : (
               <div className="flex gap-2">
                 <Button
-                  asChild
                   size="sm"
-                  className="flex-1 bg-linear-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                  className="flex-1 gradient-success"
+                  onClick={() => handleLike()}
                 >
-                  <Link href={`/networks/${member.userId}`}>
-                    <Heart className="w-4 h-4 mr-1" />
-                    Like Back
-                  </Link>
+                  <Heart className="w-4 h-4 mr-1" />
+                  Like Back
                 </Button>
                 <Button asChild variant="outline" size="sm">
                   <Link href={`/networks/${member.userId}`}>
@@ -299,14 +457,47 @@ function MemberMatchCard({
             )}
           </div>
         );
+
       case "liked":
         return (
-          <Button asChild variant="outline" size="sm" className="w-full">
-            <Link href={`/networks/${member.userId}`}>
-              <Eye className="w-4 h-4 mr-1" />
-              View Profile
-            </Link>
-          </Button>
+          <div className="space-y-2">
+            <Button asChild variant="outline" size="sm" className="w-full">
+              <Link href={`/networks/${member.userId}`}>
+                <Eye className="w-4 h-4 mr-1" />
+                View Profile
+              </Link>
+            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  disabled={isLoading}
+                >
+                  <HeartOff className="w-4 h-4 mr-1" />
+                  Unlike
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Unlike {member.name}?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will remove your like from {member.name}&apos;s
+                    profile. They won&apos;t be notified, but you can always
+                    like them again later.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleUnlike}>
+                    Unlike
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         );
     }
   };
@@ -324,10 +515,10 @@ function MemberMatchCard({
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              unoptimized // ✅ Skip optimization for external images
+              unoptimized
             />
           ) : (
-            <div className="w-full h-full bg-linear-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 flex items-center justify-center">
+            <div className="w-full h-full bg-linear-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
               <div className="text-6xl opacity-40">👨‍💻</div>
             </div>
           )}
@@ -338,16 +529,16 @@ function MemberMatchCard({
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+              <h3 className="font-bold text-lg text-foreground">
                 {member.name}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-muted-foreground text-sm">
                 {member.age} years old
               </p>
             </div>
           </div>
 
-          <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2 mb-4">
+          <p className="text-foreground text-sm line-clamp-2 mb-4">
             {member.bio}
           </p>
 
@@ -370,7 +561,6 @@ function MemberMatchCard({
   );
 }
 
-// ✅ FIXED: EmptyState Component
 function EmptyState({
   icon,
   title,
@@ -391,16 +581,9 @@ function EmptyState({
       className="flex flex-col items-center justify-center py-16 text-center"
     >
       <div className="mb-6">{icon}</div>
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-        {title}
-      </h2>
-      <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md">
-        {description}
-      </p>
-      <Button
-        asChild
-        className="bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-      >
+      <h2 className="text-2xl font-bold text-foreground mb-3">{title}</h2>
+      <p className="text-muted-foreground mb-6 max-w-md">{description}</p>
+      <Button asChild className="gradient-primary">
         <Link href={actionHref}>{actionText}</Link>
       </Button>
     </motion.div>

@@ -1,5 +1,4 @@
-// src\app\networks\[userId]\chat\ChatForm.tsx
-
+// src/app/networks/[userId]/chat/ChatForm.tsx
 "use client";
 
 import { createMessage } from "@/actions/messageActions";
@@ -8,12 +7,9 @@ import { cn, handleFormServerErrors } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-
+import { Loader2, Send } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
-import { HiPaperAirplane } from "react-icons/hi2";
 
 export default function ChatForm() {
   const router = useRouter();
@@ -40,32 +36,41 @@ export default function ChatForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-      <div className="flex items-center gap-2">
-        <Input
-          placeholder="Type a message"
-          color="faded"
-          {...register("text")}
-          className={cn(errors.text && "border-destructive")}
-        />
-        {errors.text && (
-          <p className="text-sm text-destructive mt-1">{errors.text.message}</p>
-        )}
+      <div className="flex items-start gap-2">
+        <div className="flex-1">
+          <Input
+            placeholder="Type a message..."
+            {...register("text")}
+            className={cn(
+              "resize-none",
+              errors.text && "border-destructive focus-visible:ring-destructive"
+            )}
+            disabled={isSubmitting}
+          />
+          {errors.text && (
+            <p className="text-sm text-destructive mt-1">
+              {errors.text.message}
+            </p>
+          )}
+        </div>
         <Button
           type="submit"
           size="icon"
-          color="default"
           disabled={!isValid || isSubmitting}
+          className="shrink-0"
         >
-          {isSubmitting ? <Spinner /> : <HiPaperAirplane size={18} />}
+          {isSubmitting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
         </Button>
       </div>
-      <div className="flex flex-col">
-        {errors.root?.serverError && (
-          <p className="text-danger text-sm">
-            {errors.root.serverError.message}
-          </p>
-        )}
-      </div>
+      {errors.root?.serverError && (
+        <p className="text-destructive text-sm mt-2">
+          {errors.root.serverError.message}
+        </p>
+      )}
     </form>
   );
 }

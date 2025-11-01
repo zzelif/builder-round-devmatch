@@ -1,4 +1,6 @@
-import React, { ReactNode } from "react";
+// src\app\networks\edit\layout.tsx
+
+import { ReactNode } from "react";
 import { getMemberById } from "@/actions/memberActions";
 import { getAuthUserId } from "@/actions/authActions";
 import MemberSidebar from "../MemberSidebar";
@@ -24,12 +26,23 @@ export default async function Layout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="grid grid-cols-12 gap-5 h-[80vh]">
-      <div className="col-span-3">
-        <MemberSidebar member={member} navLinks={navLinks} />
-      </div>
-      <div className="col-span-9">
-        <Card className="w-full mt-10 h-[80vh]">{children}</Card>
+    <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Sidebar */}
+        <div className="lg:col-span-4 xl:col-span-3">
+          <div className="lg:sticky lg:top-20">
+            <MemberSidebar
+              member={member}
+              navLinks={navLinks}
+              hasMatch={false}
+            />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="lg:col-span-8 xl:col-span-9">
+          <Card className="min-h-[600px]">{children}</Card>
+        </div>
       </div>
     </div>
   );

@@ -1,93 +1,105 @@
-// Alternative Menu.tsx with improved avatar handling
+// src/components/navbar/Menu.tsx
 "use client";
 
-import { signOutUser } from "@/actions/authActions";
-import { Session } from "next-auth";
-import { Button } from "@/components/ui/button";
+import { User } from "next-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { UserCircle, Heart, LogOut, ChevronDown, Zap } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import { User } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Badge } from "@/components/ui/badge";
+import ThemeSwitch from "@/components/ThemeToggle";
 
-type Props = {
-  user: Session["user"];
-};
+interface MenuProps {
+  user: User;
+}
 
-export default function Menu({ user }: Props) {
+export default function Menu({ user }: MenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
-          size="icon"
-          className="relative h-8 w-8 rounded-full overflow-hidden p-0"
+          variant="ghost"
+          className="relative h-10 px-3 hover:bg-primary/10 transition-all"
         >
-          {user?.image ? (
-            <Image
-              src={user.image}
-              alt={user?.name || "Profile"}
-              fill
-              className="object-cover"
-              sizes="32px"
-              unoptimized
-            />
-          ) : (
-            <div className="h-full w-full bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              {user?.name ? (
-                <span className="text-xs font-bold text-white">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-              ) : (
-                <User className="h-4 w-4 text-white" />
-              )}
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+              <AvatarImage
+                src={user.image || undefined}
+                alt={user.name || ""}
+              />
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                {user.name?.charAt(0).toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <span className="hidden sm:inline-block text-sm font-medium text-foreground">
+              {user.name}
+            </span>
+            <ChevronDown className="w-4 h-4 text-muted-foreground hidden sm:block" />
+          </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+
+      <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {user?.name || "User"}
-            </p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user?.email || "No email"}
-            </p>
+            <p className="text-sm font-semibold text-foreground">{user.name}</p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/networks/edit" className="cursor-pointer">
-              Edit Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+
+        <DropdownMenuItem asChild>
+          <Link
+            href="/networks/edit"
+            className="flex items-center cursor-pointer"
+          >
+            <UserCircle className="mr-2 h-4 w-4 text-primary" />
+            <span>Edit Profile</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link
+            href="/networks/edit/photos"
+            className="flex items-center cursor-pointer"
+          >
+            <Heart className="mr-2 h-4 w-4 text-danger" />
+            <span>My Photos</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link href="/lists" className="flex items-center cursor-pointer">
+            <Zap className="mr-2 h-4 w-4 text-warning" />
+            <span>Connections</span>
+            <Badge variant="secondary" className="ml-auto text-xs">
+              New
+            </Badge>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center justify-between cursor-default focus:bg-transparent">
+          <span className="text-sm">Theme</span>
+          <ThemeSwitch />
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
+
         <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={async () => {
-            await signOutUser();
-          }}
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className="text-destructive focus:text-destructive cursor-pointer"
         >
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,26 +1,29 @@
+// src/hooks/usePresenceStore.ts
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
 
-type PresenceState = {
-  membersId: string[];
-  add: (id: string) => void;
-  remove: (id: string) => void;
-  set: (ids: string[]) => void;
+export type PresenceState = {
+  onlineMembers: string[];
 };
 
-const usePresenceStore = create<PresenceState>()(
-  devtools(
-    (set) => ({
-      membersId: [],
-      add: (id) => set((state) => ({ membersId: [...state.membersId, id] })),
-      remove: (id) =>
-        set((state) => ({
-          membersId: state.membersId.filter((memberId) => memberId !== id),
-        })),
-      set: (ids) => set({ membersId: ids }),
-    }),
-    { name: "PresenceStoreDemo" }
-  )
-);
+export type PresenceActions = {
+  addMember: (id: string) => void;
+  removeMember: (id: string) => void;
+  setMembers: (ids: string[]) => void;
+  isOnline: (id: string) => boolean;
+};
 
-export default usePresenceStore;
+export type PresenceStore = PresenceState & PresenceActions;
+
+export const usePresenceStore = create<PresenceStore>((set, get) => ({
+  onlineMembers: [],
+  addMember: (id: string) =>
+    set((state) => ({
+      onlineMembers: Array.from(new Set([...state.onlineMembers, id])),
+    })),
+  removeMember: (id: string) =>
+    set((state) => ({
+      onlineMembers: state.onlineMembers.filter((memberId) => memberId !== id),
+    })),
+  setMembers: (ids: string[]) => set({ onlineMembers: ids }),
+  isOnline: (id: string) => get().onlineMembers.includes(id),
+}));

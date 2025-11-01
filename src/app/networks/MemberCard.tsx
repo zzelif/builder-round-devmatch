@@ -6,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Member } from "@prisma/client";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
-import { Briefcase, Heart, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Heart, X } from "lucide-react";
+// import { Badge } from "@/components/ui/badge";
 
 type Props = {
   member: Member;
@@ -67,55 +67,55 @@ export default function MemberCard({
     >
       <Card className="w-full h-full bg-white dark:bg-slate-900 shadow-2xl border-0 overflow-hidden">
         <CardContent className="p-0 h-full flex flex-col relative">
-          {/* Enhanced Profile Image Section */}
+          {/* Profile Image Section */}
           <div className="relative h-2/3 overflow-hidden">
             {member.image ? (
-              <>
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover"
-                  loading="lazy"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-                {/* Gradient overlay for better text readability */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-              </>
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority
+                unoptimized
+              />
             ) : (
-              <div className="w-full h-full bg-linear-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 flex items-center justify-center">
+              <div className="w-full h-full bg-linear-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
                 <div className="text-8xl opacity-20">👨‍💻</div>
               </div>
             )}
 
-            {/* Enhanced Swipe Indicators */}
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+
+            {/* Swipe Indicators */}
             <motion.div
               className="absolute top-8 right-8 px-4 py-2 rounded-full font-bold text-lg flex items-center gap-2 shadow-lg"
               style={{ opacity: passOpacity }}
             >
-              <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-                <X className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-danger rounded-full flex items-center justify-center">
+                <X className="w-6 h-6 text-danger-foreground" />
               </div>
-              <span className="text-red-500 font-black text-xl">PASS</span>
+              <span className="text-danger font-black text-xl">PASS</span>
             </motion.div>
 
             <motion.div
               className="absolute top-8 left-8 px-4 py-2 rounded-full font-bold text-lg flex items-center gap-2 shadow-lg"
               style={{ opacity: likeOpacity }}
             >
-              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white fill-white" />
+              <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center">
+                <Heart className="w-6 h-6 text-success-foreground fill-current" />
               </div>
-              <span className="text-green-500 font-black text-xl">LIKE</span>
+              <span className="text-success font-black text-xl">LIKE</span>
             </motion.div>
 
             {/* Developer Badge */}
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-indigo-500 text-white border-0 shadow-lg">
+            {/* <div className="absolute top-4 left-4">
+              <Badge className="bg-primary text-primary-foreground shadow-lg">
                 <Briefcase className="w-3 h-3 mr-1" />
                 Developer
               </Badge>
-            </div>
+            </div> */}
           </div>
 
           {/* Enhanced Profile Info Section */}
