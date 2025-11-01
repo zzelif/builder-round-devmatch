@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Code, Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Heart, Code, Github, Linkedin, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
@@ -38,9 +38,12 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { icon: Github, href: "", label: "GitHub" },
+    {
+      icon: Github,
+      href: "https://github.com/zzelif/builder-round-devmatch",
+      label: "GitHub",
+    },
     { icon: Linkedin, href: "", label: "LinkedIn" },
-    { icon: Twitter, href: "", label: "Twitter" },
     { icon: Mail, href: "mailto:support@devmatch.com", label: "Email" },
   ];
 
@@ -68,6 +71,8 @@ export default function Footer() {
                   key={label}
                   href={href}
                   title={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center"
                 >
                   <Icon className="w-5 h-5" />
