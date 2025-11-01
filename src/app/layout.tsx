@@ -6,6 +6,7 @@ import "./globals.css";
 import TopNav from "@/components/navbar/TopNavClient";
 import Providers from "@/components/Providers";
 import { auth } from "@/auth";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,14 +30,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const profileComplete = session?.user?.profileComplete ?? false;
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers session={session}>
+        <Providers session={session} profileComplete={profileComplete}>
           <TopNav session={session} />
           <main className="mx-auto">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

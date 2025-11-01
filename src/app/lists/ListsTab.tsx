@@ -542,7 +542,7 @@ function MemberMatchCard({
             {member.bio}
           </p>
 
-          <div className="flex flex-wrap gap-1 mb-4">
+          {/* <div className="flex flex-wrap gap-1 mb-4">
             <Badge variant="secondary" className="text-xs">
               React
             </Badge>
@@ -552,7 +552,7 @@ function MemberMatchCard({
             <Badge variant="secondary" className="text-xs">
               TypeScript
             </Badge>
-          </div>
+          </div> */}
 
           {getActions()}
         </div>

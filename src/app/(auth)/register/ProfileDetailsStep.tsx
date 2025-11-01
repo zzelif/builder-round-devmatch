@@ -1,4 +1,4 @@
-// src/app/(auth)/register/ProfileDetailsStep.tsx - CLEAN VERSION
+// src/app/(auth)/register/ProfileDetailsStep.tsx
 "use client";
 
 import { useState } from "react";
@@ -27,16 +27,24 @@ import {
   CldUploadButton,
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
-import { Upload, User } from "lucide-react";
+import { Upload, User, Loader2 } from "lucide-react";
 
-export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
+type Props = {
+  onBack: () => void;
+  isSubmitting?: boolean; // ✅ Accept from parent
+};
+
+export default function ProfileDetailsStep({
+  onBack,
+  isSubmitting = false,
+}: Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const {
     register,
     control,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useFormContext<RegisterSchema>();
 
   const handleCloudinaryUpload = (result: CloudinaryUploadWidgetResults) => {
@@ -45,8 +53,6 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
       const publicId = result.info.public_id;
 
       setPreviewImage(imageUrl);
-
-      // ✅ Set form values directly
       setValue("profileImageUrl", imageUrl);
       setValue("profileImagePublicId", publicId);
     }
@@ -54,7 +60,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
 
   return (
     <FieldGroup>
-      {/* Enhanced Profile Picture Upload */}
+      {/* Profile Picture Upload */}
       <div className="flex flex-col items-center space-y-4 mb-6">
         <div className="relative group">
           {previewImage ? (
@@ -126,18 +132,18 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
           name="gender"
           control={control}
           render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select onValueChange={field.onChange} value={field.value || ""}>
               <SelectTrigger
                 className={cn(errors.gender && "border-destructive")}
               >
                 <SelectValue placeholder="Select your gender" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">👨 Male</SelectItem>
-                <SelectItem value="female">👩 Female</SelectItem>
-                <SelectItem value="non-binary">🏳️‍⚧️ Non-binary</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="non-binary">Non-binary</SelectItem>
                 <SelectItem value="prefer-not-to-say">
-                  🤐 Prefer not to say
+                  Prefer not to say
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -200,7 +206,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
       </div>
 
       <Field>
-        <FieldLabel htmlFor="bio">Developer Bio</FieldLabel>
+        <FieldLabel htmlFor="bio">Short Bio</FieldLabel>
         <Textarea
           id="bio"
           placeholder="Who are you, what do u like to do, and what are you looking for?"
@@ -212,7 +218,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
           <p className="text-sm text-destructive mt-1">{errors.bio.message}</p>
         )}
         <FieldDescription>
-          Share your coding journey and what makes you unique as a developer
+          Describe yourself, your hobbies, personality, life...
         </FieldDescription>
       </Field>
 
@@ -222,6 +228,7 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
           variant="outline"
           className="flex-1"
           onClick={onBack}
+          disabled={isSubmitting}
         >
           Back
         </Button>
@@ -230,7 +237,14 @@ export default function ProfileDetailsStep({ onBack }: { onBack: () => void }) {
           className="flex-1 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Creating Account..." : "Complete Registration"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Account...
+            </>
+          ) : (
+            "Complete Registration"
+          )}
         </Button>
       </div>
     </FieldGroup>

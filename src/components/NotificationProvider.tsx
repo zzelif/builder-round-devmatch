@@ -9,16 +9,18 @@ import { Session } from "next-auth";
 interface NotificationProviderProps {
   children: ReactNode;
   session: Session | null;
+  profileComplete: boolean;
 }
 
 export default function NotificationProvider({
   children,
   session,
+  profileComplete,
 }: NotificationProviderProps) {
   const userId = session?.user?.id;
 
-  useNotificationChannel(userId || "");
-  usePresenceChannel(userId || "");
+  useNotificationChannel(userId || "", profileComplete);
+  usePresenceChannel(userId || "", profileComplete);
 
   return <>{children}</>;
 }

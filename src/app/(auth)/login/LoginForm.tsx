@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,18 +18,39 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { FaGithub } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginSchema } from "@/lib/schemas/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInUser } from "@/actions/authActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+
+  const providers = [
+    {
+      name: "google",
+      icon: <FcGoogle size={20} />,
+      text: "Google",
+    },
+    {
+      name: "github",
+      icon: <FaGithub size={20} />,
+      text: "GitHub",
+    },
+  ];
+
+  const onClick = (provider: "google" | "github") => {
+    signIn(provider, {
+      callbackUrl: "/networks",
+    });
+  };
 
   const {
     register,
@@ -57,17 +78,26 @@ export default function LoginForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Login with your GitHub account</CardDescription>
+          {/* <CardDescription>Login with your GitHub account</CardDescription> */}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
-              <Field>
-                <Button variant="outline" type="button">
-                  <FaGithub className="size-5" />
-                  Login with GitHub
-                </Button>
-              </Field>
+              {providers.map((provider) => (
+                <Field key={provider.name}>
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() =>
+                      onClick(provider.name as "google" | "github")
+                    }
+                    className="w-full gap-2"
+                  >
+                    {provider.icon}
+                    Login with {provider.text}
+                  </Button>
+                </Field>
+              ))}
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
@@ -90,7 +120,7 @@ export default function LoginForm({
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <a
-                    href="#"
+                    href="/forgot-password"
                     className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?

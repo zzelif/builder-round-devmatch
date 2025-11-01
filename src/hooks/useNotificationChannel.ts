@@ -27,13 +27,32 @@ interface MatchNotification {
   image?: string;
 }
 
-export const useNotificationChannel = (userId: string) => {
+export const useNotificationChannel = (
+  userId: string | null,
+  profileComplete: boolean
+) => {
   const { updateUnreadCount } = useMessageStore();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!pusherClient || !userId) return;
+    console.log(
+      "🔍 Notification Channel - userId:",
+      userId,
+      "profileComplete:",
+      profileComplete
+    );
+  }, [userId, profileComplete]);
+
+  useEffect(() => {
+    if (!pusherClient || !userId || !profileComplete) {
+      console.log("⚠️ Skipping notification channel:", {
+        pusherClient: !!pusherClient,
+        userId,
+        profileComplete,
+      });
+      return;
+    }
 
     const channel = pusherClient.subscribe(`private-${userId}`);
 
@@ -81,5 +100,5 @@ export const useNotificationChannel = (userId: string) => {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, [userId, updateUnreadCount, router, pathname]);
+  }, [userId, updateUnreadCount, router, pathname, profileComplete]);
 };

@@ -18,11 +18,14 @@ interface PusherMember {
   user_info?: UserInfo;
 }
 
-export const usePresenceChannel = (userId: string) => {
+export const usePresenceChannel = (
+  userId: string | null,
+  profileComplete: boolean
+) => {
   const { addMember, removeMember, setMembers } = usePresenceStore();
 
   useEffect(() => {
-    if (!pusherClient || !userId) return;
+    if (!pusherClient || !userId || !profileComplete) return;
 
     const channel = pusherClient.subscribe("presence-online");
 
@@ -46,5 +49,5 @@ export const usePresenceChannel = (userId: string) => {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, [userId, addMember, removeMember, setMembers]);
+  }, [userId, addMember, removeMember, setMembers, profileComplete]);
 };

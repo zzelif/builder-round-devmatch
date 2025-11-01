@@ -11,9 +11,14 @@ import { Session } from "next-auth";
 interface ProvidersProps {
   children: ReactNode;
   session: Session | null;
+  profileComplete: boolean;
 }
 
-export default function Providers({ children, session }: ProvidersProps) {
+export default function Providers({
+  children,
+  session,
+  profileComplete,
+}: ProvidersProps) {
   return (
     <ThemeProvider
       attribute="class"
@@ -21,7 +26,7 @@ export default function Providers({ children, session }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <NotificationProvider session={session}>
+      <NotificationProvider session={session} profileComplete={profileComplete}>
         <ToastContainer
           position="bottom-right"
           hideProgressBar

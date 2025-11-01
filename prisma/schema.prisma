@@ -98,3 +98,18 @@ enum Gender {
   NON_BINARY
   PREFER_NOT_TO_SAY
 }
+
+model Token {
+  id      String    @id @default(cuid())
+  email   String
+  token   String
+  expires DateTime
+  type    TokenType
+
+  @@unique([email, token])
+}
+
+enum TokenType {
+  VERIFICATION
+  PASSWORD_RESET
+}
