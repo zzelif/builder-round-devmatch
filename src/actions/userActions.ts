@@ -3,7 +3,7 @@
 "use server";
 
 import { ActionResult } from "@/types";
-import { Member, Photo } from "@prisma/client";
+import { Member, Photo } from "@/generated/prisma";
 import { getAuthUserId } from "./authActions";
 import { prisma } from "@/lib/prisma";
 import { editSchema, EditSchema } from "@/lib/schemas/EditSchema";

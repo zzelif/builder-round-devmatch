@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { Photo } from "@prisma/client";
+import { Photo } from "@/generated/prisma";
 
 export async function getMembers() {
   const session = await auth();

@@ -2,7 +2,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import { pusherServer } from "@/lib/pusher";
 
 export async function getUndiscoveredMembers(

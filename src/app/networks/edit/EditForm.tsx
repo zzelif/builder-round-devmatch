@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";

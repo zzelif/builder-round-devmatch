@@ -13,7 +13,7 @@ import {
 } from "@/lib/schemas/RegisterSchema";
 import { generateToken, getTokenByToken } from "@/lib/tokens";
 import { ActionResult } from "@/types";
-import { TokenType, User } from "@prisma/client";
+import { TokenType, User } from "@/generated/prisma";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 

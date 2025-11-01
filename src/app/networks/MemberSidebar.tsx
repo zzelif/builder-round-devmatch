@@ -1,7 +1,7 @@
 // src/app/networks/MemberSidebar.tsx
 "use client";
 
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import MemberCard from "./MemberCard";
 import { recordSwipe } from "@/actions/likeActions";
 import { Button } from "@/components/ui/button";

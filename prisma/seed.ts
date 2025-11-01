@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient, Gender } from "@prisma/client";
+import { PrismaClient, Gender } from "../src/generated/prisma";
 import { hash } from "bcryptjs";
 import { membersData } from "./membersData";
 

@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { deleteImage, setMainImage } from "@/actions/userActions";
-import { Photo } from "@prisma/client";
+import { Photo } from "@/generated/prisma";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

@@ -7,7 +7,7 @@ import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 import { Camera } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Photo } from "@prisma/client";
+import { Photo } from "@/generated/prisma";
 
 export default function PhotosPage({
   params,

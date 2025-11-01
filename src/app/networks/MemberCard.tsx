@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Heart, X } from "lucide-react";

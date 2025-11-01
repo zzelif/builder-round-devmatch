@@ -1,4 +1,4 @@
-import { TokenType } from "@prisma/client";
+import { TokenType } from "@/generated/prisma";
 import { prisma } from "./prisma";
 
 export async function getTokenByEmail(email: string) {

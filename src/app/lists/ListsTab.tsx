@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Member } from "@prisma/client";
+import { Member } from "@/generated/prisma";
 import {
   Heart,
   HeartHandshake,

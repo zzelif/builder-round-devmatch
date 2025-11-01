@@ -1,7 +1,7 @@
 // src/components/MemberImage.tsx - COMPLETE COMPONENT
 "use client";
 
-import { Photo } from "@prisma/client";
+import { Photo } from "@/generated/prisma";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 
