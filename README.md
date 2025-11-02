@@ -1,12 +1,10 @@
----
-
-# DevMatch: A Developer-Focused Dating Application[^1]
+## DevMatch: A Developer-Focused Dating Application
 
 ## Project Overview
 
-**DevMatch** is a full-stack dating application built specifically for software developers to connect, discover matches, and collaborate based on shared technical interests and professional backgrounds. Developed as a **WC Launchpad Builder Round** project, it is a minimal viable product (MVP) completed within a five-day sprint (October 27-31, 2025), designed to showcase technical skills, product sense, and full-stack development capabilities.[^1]
+**DevMatch** is a full-stack dating application built specifically for software developers to connect, discover matches, and collaborate based on shared technical interests and professional backgrounds. Developed as a **WC Launchpad Builder Round** project, it is a minimal viable product (MVP) completed within a five-day sprint (October 27-31, 2025), designed to showcase technical skills, product sense, and full-stack development capabilities.
 
-The application enables users to create comprehensive developer profiles, browse and swipe through potential matches, establish mutual connections, and engage in real-time messaging with matched users.[^1]
+The application enables users to create comprehensive developer profiles, browse and swipe through potential matches, establish mutual connections, and engage in real-time messaging with matched users.
 
 ## Table of Contents
 
@@ -26,87 +24,87 @@ The application enables users to create comprehensive developer profiles, browse
 
 ## Key Features
 
-### User Authentication \& Profiles[^1]
+### User Authentication \& Profiles
 
-- **Multi-provider authentication** via credentials, Google OAuth, and GitHub OAuth[^1]
-- **Email verification** with token-based secure links[^1]
-- **Password reset functionality** via email tokens[^1]
+- **Multi-provider authentication** via credentials, Google OAuth, and GitHub OAuth
+- **Email verification** with token-based secure links
+- **Password reset functionality** via email tokens
 - **Two-step registration process** with profile completion
-- **Profile completion flow** for social login users[^1]
+- **Profile completion flow** for social login users
 
-### Matching \& Discovery[^1]
+### Matching \& Discovery
 
-- **Swipe interface** for discovering other developers with intuitive card-based browsing[^1]
-- **Like/Unlike functionality** to express interest in other profiles[^1]
-- **Mutual matching logic** to identify when two users have liked each other[^1]
-- **Member discovery** with pagination and filtering[^1]
+- **Swipe interface** for discovering other developers with intuitive card-based browsing
+- **Like/Unlike functionality** to express interest in other profiles
+- **Mutual matching logic** to identify when two users have liked each other
+- **Member discovery** with pagination and filtering
 
-### Real-Time Messaging[^1]
+### Real-Time Messaging
 
-- **Matched member chat** using Pusher for real-time message synchronization[^1]
-- **Message history** with read receipts and timestamps[^1]
-- **Unread message tracking** with client-side state management[^1]
-- **Message notifications** via Pusher channels[^1]
+- **Matched member chat** using Pusher for real-time message synchronization
+- **Message history** with read receipts and timestamps
+- **Unread message tracking** with client-side state management
+- **Message notifications** via Pusher channels
 
-### Profile Management[^1]
+### Profile Management
 
-- **Profile editing** with ability to update bio, location, and personal details[^1]
-- **Photo uploads** to Cloudinary with signed image URLs[^1]
-- **Member photo gallery** display for enhanced profile viewing[^1]
-- **Presence indicators** showing online/offline status[^1]
+- **Profile editing** with ability to update bio, location, and personal details
+- **Photo uploads** to Cloudinary with signed image URLs
+- **Member photo gallery** display for enhanced profile viewing
+- **Presence indicators** showing online/offline status
 
-### User Interface[^1]
+### User Interface
 
-- **Responsive design** using Tailwind CSS and Lucide icons[^1]
-- **Light/dark mode** support with theme toggle[^1]
-- **Component-based architecture** using shadcn/ui components[^1]
-- **Smooth animations** via Framer Motion for interactive CTAs and transitions[^1]
+- **Responsive design** using Tailwind CSS and Lucide icons
+- **Light/dark mode** support with theme toggle
+- **Component-based architecture** using shadcn/ui components
+- **Smooth animations** via Framer Motion for interactive CTAs and transitions
 
 ## Tech Stack
 
-### Frontend[^1]
+### Frontend
 
-| Technology                       | Purpose                                                                       |
-| :------------------------------- | :---------------------------------------------------------------------------- |
-| **Next.js 16** (App Router) [^1] | React meta-framework with server/client components, routing, and optimization |
-| **React 19.2** [^1]              | UI component library and state management                                     |
-| **TypeScript 5** [^1]            | Type-safe JavaScript for robust development                                   |
-| **Tailwind CSS 4** [^1]          | Utility-first CSS framework for responsive styling                            |
-| **shadcn/ui** [^1]               | Pre-built, customizable Radix UI components                                   |
-| **Lucide React** [^1]            | Icon library for UI elements                                                  |
-| **React Hook Form 7.65** [^1]    | Form state management and validation                                          |
-| **Zod 4.1** [^1]                 | TypeScript-first schema validation                                            |
-| **Framer Motion 12.23** [^1]     | Animation library for smooth transitions and interactions                     |
-| **Zustand 5** [^1]               | Lightweight state management for client-side stores                           |
-| **next-themes 0.4** [^1]         | Dark/light mode theme management                                              |
-| **Pusher.js 8.4** [^1]           | Real-time WebSocket messaging                                                 |
+| Technology                  | Purpose                                                                       |
+| :-------------------------- | :---------------------------------------------------------------------------- |
+| **Next.js 16** (App Router) | React meta-framework with server/client components, routing, and optimization |
+| **React 19.2**              | UI component library and state management                                     |
+| **TypeScript 5**            | Type-safe JavaScript for robust development                                   |
+| **Tailwind CSS 4**          | Utility-first CSS framework for responsive styling                            |
+| **shadcn/ui**               | Pre-built, customizable Radix UI components                                   |
+| **Lucide React**            | Icon library for UI elements                                                  |
+| **React Hook Form 7.65**    | Form state management and validation                                          |
+| **Zod 4.1**                 | TypeScript-first schema validation                                            |
+| **Framer Motion 12.23**     | Animation library for smooth transitions and interactions                     |
+| **Zustand 5**               | Lightweight state management for client-side stores                           |
+| **next-themes 0.4**         | Dark/light mode theme management                                              |
+| **Pusher.js 8.4**           | Real-time WebSocket messaging                                                 |
 
-### Backend[^1]
+### Backend
 
-| Technology                  | Purpose                                  |
-| :-------------------------- | :--------------------------------------- |
-| **Next.js API Routes** [^1] | Serverless backend endpoints             |
-| **NextAuth 5 (Beta)** [^1]  | Authentication and session management    |
-| **Prisma 6.18** [^1]        | TypeScript ORM for database interactions |
-| **PostgreSQL** (Neon) [^1]  | Relational database                      |
-| **Bcryptjs 3** [^1]         | Password hashing and encryption          |
-| **Pusher 5.2** [^1]         | Real-time messaging and presence         |
-| **Cloudinary 2.8**          | Image storage and CDN                    |
-| **Resend 6.4**              | Email delivery service                   |
+| Technology             | Purpose                                  |
+| :--------------------- | :--------------------------------------- |
+| **Next.js API Routes** | Serverless backend endpoints             |
+| **NextAuth 5 (Beta)**  | Authentication and session management    |
+| **Prisma 6.18**        | TypeScript ORM for database interactions |
+| **PostgreSQL** (Neon)  | Relational database                      |
+| **Bcryptjs 3**         | Password hashing and encryption          |
+| **Pusher 5.2**         | Real-time messaging and presence         |
+| **Cloudinary 2.8**     | Image storage and CDN                    |
+| **Resend 6.4**         | Email delivery service                   |
 
-### Development Tools[^1]
+### Development Tools
 
-| Tool                          | Purpose                               |
-| :---------------------------- | :------------------------------------ |
-| **ESLint 9 \& Prettier** [^1] | Code linting and formatting           |
-| **PostCSS 4** [^1]            | CSS processing with Tailwind          |
-| **tsx 4.20** [^1]             | TypeScript execution for seed scripts |
+| Tool                     | Purpose                               |
+| :----------------------- | :------------------------------------ |
+| **ESLint 9 \& Prettier** | Code linting and formatting           |
+| **PostCSS 4**            | CSS processing with Tailwind          |
+| **tsx 4.20**             | TypeScript execution for seed scripts |
 
 ## Architecture \& Design
 
 ### Full-Stack Architecture
 
-DevMatch follows a **modern full-stack Next.js architecture** with clear separation of concerns:[^1]
+DevMatch follows a **modern full-stack Next.js architecture** with clear separation of concerns:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -132,7 +130,7 @@ DevMatch follows a **modern full-stack Next.js architecture** with clear separat
 └─────────────────────────────────────────────────────────┘
 ```
 
-### Authentication Flow[^1]
+### Authentication Flow
 
 ```
 User Input
@@ -152,12 +150,12 @@ Middleware Redirect Check (proxy.ts)
 Authenticated Session Access
 ```
 
-### Real-Time Messaging Architecture[^1]
+### Real-Time Messaging Architecture
 
-- **Pusher Integration**: Enables WebSocket-based real-time message delivery[^1]
-- **Server Actions**: Server-side functions for mutations (sendMessage, likeUser)[^1]
-- **Zustand Stores**: Client-side state for message history and unread counts[^1]
-- **Hooks**: Custom React hooks (useMessages, usePresenceChannel, useNotificatioChannel) for data binding[^1]
+- **Pusher Integration**: Enables WebSocket-based real-time message delivery
+- **Server Actions**: Server-side functions for mutations (sendMessage, likeUser)
+- **Zustand Stores**: Client-side state for message history and unread counts
+- **Hooks**: Custom React hooks (useMessages, usePresenceChannel, useNotificatioChannel) for data binding
 
 ## Project Structure
 
@@ -316,73 +314,73 @@ zzelif-builder-round-devmatch/
 
 ## Authentication System
 
-### Providers \& Strategies[^1]
+### Providers \& Strategies
 
-**NextAuth v5 (Beta)** provides multi-authentication support:[^1]
+**NextAuth v5 (Beta)** provides multi-authentication support:
 
-1. **Credentials Provider**[^1]
-   - Email/password authentication[^1]
-   - Credentials validated via `loginSchema` (Zod)[^1]
-   - Password verified using bcryptjs comparison[^1]
-2. **Google OAuth**[^1]
-   - Client ID/Secret from Google Cloud Console[^1]
-   - User profile mapped with `profileComplete: false`[^1]
-3. **GitHub OAuth**[^1]
-   - Separate credentials for dev and production[^1]
-   - Ideal for developer-focused platform[^1]
+1. **Credentials Provider**
+   - Email/password authentication
+   - Credentials validated via `loginSchema` (Zod)
+   - Password verified using bcryptjs comparison
+2. **Google OAuth**
+   - Client ID/Secret from Google Cloud Console
+   - User profile mapped with `profileComplete: false`
+3. **GitHub OAuth**
+   - Separate credentials for dev and production
+   - Ideal for developer-focused platform
 
-### Session \& JWT Flow[^1]
+### Session \& JWT Flow
 
-The `auth.ts` file orchestrates authentication with custom callbacks:[^1]
+The `auth.ts` file orchestrates authentication with custom callbacks:
 
-- **JWT Callback**: Updates token with user data and profile completion status[^1]
-- **Session Callback**: Enriches session with JWT payload for client access[^1]
-- **Adapter**: Uses `@auth/prisma-adapter` for user/account persistence[^1]
-- **Strategy**: JWT-based sessions with 30-day expiration[^1]
+- **JWT Callback**: Updates token with user data and profile completion status
+- **Session Callback**: Enriches session with JWT payload for client access
+- **Adapter**: Uses `@auth/prisma-adapter` for user/account persistence
+- **Strategy**: JWT-based sessions with 30-day expiration
 
-### Email Verification \& Password Reset[^1]
+### Email Verification \& Password Reset
 
-- **Token Generation**: Creates unique, time-bound tokens for email verification and password reset[^1]
-- **Email Delivery**: Uses Resend service for transactional emails[^1]
-- **Token Expiration**: Tokens expire after configurable duration, enforced at verification[^1]
+- **Token Generation**: Creates unique, time-bound tokens for email verification and password reset
+- **Email Delivery**: Uses Resend service for transactional emails
+- **Token Expiration**: Tokens expire after configurable duration, enforced at verification
 
-### Middleware \& Route Protection[^1]
+### Middleware \& Route Protection
 
-`proxy.ts` implements middleware logic:[^1]
+`proxy.ts` implements middleware logic:
 
 - Protects routes via auth middleware
-- Redirects unauthenticated users to `/login`[^1]
-- Forces profile completion for social login users[^1]
-- Differentiates public vs. auth-only routes[^1]
+- Redirects unauthenticated users to `/login`
+- Forces profile completion for social login users
+- Differentiates public vs. auth-only routes
 
 ## Core Modules
 
-### 1. Authentication Module[^1]
+### 1. Authentication Module
 
-**File**: `src/actions/authActions.ts`[^1]
+**File**: `src/actions/authActions.ts`
 
-**Key Functions**:[^1]
+**Key Functions**:
 
-- `signInUser(data)` - Credentials-based login with email verification check[^1]
-- `registerUser(data)` - Multi-step registration with profile and photo creation[^1]
-- `verifyEmail(token)` - Confirms email ownership via token[^1]
-- `resetPassword(password, token)` - Updates password with token validation[^1]
-- `completeSocialLoginProfile(data)` - Finalizes social login with profile details[^1]
-- `generateResetPasswordEmail(email)` - Initiates password reset flow[^1]
+- `signInUser(data)` - Credentials-based login with email verification check
+- `registerUser(data)` - Multi-step registration with profile and photo creation
+- `verifyEmail(token)` - Confirms email ownership via token
+- `resetPassword(password, token)` - Updates password with token validation
+- `completeSocialLoginProfile(data)` - Finalizes social login with profile details
+- `generateResetPasswordEmail(email)` - Initiates password reset flow
 
-### 2. Matching \& Like System[^1]
+### 2. Matching \& Like System
 
-**File**: `src/actions/likeActions.ts`[^1]
+**File**: `src/actions/likeActions.ts`
 
-**Functionality**:[^1]
+**Functionality**:
 
-- **Like User**: Records unidirectional interest[^1]
-- **Unlike User**: Removes previous like[^1]
-- **Check Mutual Likes**: Identifies two-way matches[^1]
-- **Fetch Likes**: Retrieves outgoing/incoming likes with pagination[^1]
-- **Discover Members**: Returns list of non-liked users for swiping[^1]
+- **Like User**: Records unidirectional interest
+- **Unlike User**: Removes previous like
+- **Check Mutual Likes**: Identifies two-way matches
+- **Fetch Likes**: Retrieves outgoing/incoming likes with pagination
+- **Discover Members**: Returns list of non-liked users for swiping
 
-**Database Model**:[^1]
+**Database Model**:
 
 ```prisma
 model Like {
@@ -396,43 +394,43 @@ model Like {
 }
 ```
 
-This ensures each user can like another only once.[^1]
+This ensures each user can like another only once.
 
-### 3. Messaging System[^1]
+### 3. Messaging System
 
-**File**: `src/actions/messageActions.ts`[^1]
+**File**: `src/actions/messageActions.ts`
 
-**Core Features**:[^1]
+**Core Features**:
 
-- **Send Message**: Creates message record with Pusher notification[^1]
-- **Fetch Conversations**: Retrieves unique conversations with latest message[^1]
-- **Get Messages**: Fetches message history between two members[^1]
-- **Mark as Read**: Updates `dateRead` timestamp[^1]
-- **Delete Message**: Soft-delete for sender/recipient separately[^1]
+- **Send Message**: Creates message record with Pusher notification
+- **Fetch Conversations**: Retrieves unique conversations with latest message
+- **Get Messages**: Fetches message history between two members
+- **Mark as Read**: Updates `dateRead` timestamp
+- **Delete Message**: Soft-delete for sender/recipient separately
 
-**Real-Time Integration**:[^1]
+**Real-Time Integration**:
 
-- Pusher channels notify matched users of new messages[^1]
-- Message store (Zustand) caches and syncs in real-time[^1]
-- Custom hooks (useMessages, useNotificationChannel) bind data to components[^1]
+- Pusher channels notify matched users of new messages
+- Message store (Zustand) caches and syncs in real-time
+- Custom hooks (useMessages, useNotificationChannel) bind data to components
 
-### 4. Member Profile Management[^1]
+### 4. Member Profile Management
 
-**File**: `src/actions/memberActions.ts`[^1]
+**File**: `src/actions/memberActions.ts`
 
-**Capabilities**:[^1]
+**Capabilities**:
 
-- **Fetch Member**: Retrieves user profile with photos and member details[^1]
-- **Update Member**: Modifies bio, location, and profile info[^1]
-- **Upload Photos**: Handles Cloudinary integration for image storage[^1]
-- **Delete Photo**: Removes image from profile[^1]
-- **Get All Members**: Returns paginated list with filtering[^1]
+- **Fetch Member**: Retrieves user profile with photos and member details
+- **Update Member**: Modifies bio, location, and profile info
+- **Upload Photos**: Handles Cloudinary integration for image storage
+- **Delete Photo**: Removes image from profile
+- **Get All Members**: Returns paginated list with filtering
 
 ## Database Schema
 
-### Core Models[^1]
+### Core Models
 
-**User Model**[^1]
+**User Model**
 
 ```prisma
 model User {
@@ -450,11 +448,11 @@ model User {
 }
 ```
 
-- Stores authentication credentials and basic info[^1]
-- One-to-one relation with Member model[^1]
-- Tracks profile completion status[^1]
+- Stores authentication credentials and basic info
+- One-to-one relation with Member model
+- Tracks profile completion status
 
-**Member Model**[^1]
+**Member Model**
 
 ```prisma
 model Member {
@@ -484,11 +482,11 @@ enum Gender {
 }
 ```
 
-- Extends User with dating profile details[^1]
-- Supports many-to-many relationships via Like model[^1]
-- Maintains message relationships (sender/recipient)[^1]
+- Extends User with dating profile details
+- Supports many-to-many relationships via Like model
+- Maintains message relationships (sender/recipient)
 
-**Like Model**[^1]
+**Like Model**
 
 ```prisma
 model Like {
@@ -502,10 +500,10 @@ model Like {
 }
 ```
 
-- Records directional interest between members[^1]
-- Unique constraint prevents duplicate likes[^1]
+- Records directional interest between members
+- Unique constraint prevents duplicate likes
 
-**Message Model**[^1]
+**Message Model**
 
 ```prisma
 model Message {
@@ -522,11 +520,11 @@ model Message {
 }
 ```
 
-- Stores chat messages between matched members[^1]
-- Read receipts via `dateRead`[^1]
-- Soft-delete flags for privacy[^1]
+- Stores chat messages between matched members
+- Read receipts via `dateRead`
+- Soft-delete flags for privacy
 
-**Photo Model**[^1]
+**Photo Model**
 
 ```prisma
 model Photo {
@@ -538,10 +536,10 @@ model Photo {
 }
 ```
 
-- Associates images with member profiles[^1]
-- Stores Cloudinary public ID for management[^1]
+- Associates images with member profiles
+- Stores Cloudinary public ID for management
 
-**Token Model**[^1]
+**Token Model**
 
 ```prisma
 model Token {
@@ -559,9 +557,9 @@ enum TokenType {
 }
 ```
 
-- Temporary tokens for email verification and password resets[^1]
+- Temporary tokens for email verification and password resets
 
-**Account Model**[^1]
+**Account Model**
 
 ```prisma
 model Account {
@@ -582,18 +580,18 @@ model Account {
 }
 ```
 
-- NextAuth adapter model for OAuth accounts[^1]
+- NextAuth adapter model for OAuth accounts
 
 ## Setup \& Installation
 
-### Prerequisites[^1]
+### Prerequisites
 
-- **Node.js** 18+[^1]
-- **npm**, **yarn**, or **pnpm** package manager[^1]
-- **PostgreSQL** database (local or cloud via Neon)[^1]
-- **Git** for version control[^1]
+- **Node.js** 18+
+- **npm**, **yarn**, or **pnpm** package manager
+- **PostgreSQL** database (local or cloud via Neon)
+- **Git** for version control
 
-### Clone \& Install[^1]
+### Clone \& Install
 
 ```bash
 # Clone repository
@@ -606,7 +604,7 @@ npm install
 yarn install
 ```
 
-### Database Operations[^1]
+### Database Operations
 
 ```bash
 # Generate Prisma client
@@ -625,19 +623,19 @@ npx prisma db seed
 npx prisma studio
 ```
 
-### Start Development Server[^1]
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.[^1]
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Environment Configuration
 
-### Required Environment Variables[^1]
+### Required Environment Variables
 
-Create a `.env.local` file in the project root with:[^1]
+Create a `.env.local` file in the project root with:
 
 ```env
 # Database
@@ -673,46 +671,46 @@ CLOUDINARY_API_SECRET="your-cloudinary-api-secret"
 RESEND_API_KEY="your-resend-api-key"
 ```
 
-### Setup Steps[^1]
+### Setup Steps
 
-1. **PostgreSQL Database**: Create database and set `DATABASE_URL`[^1]
-2. **NextAuth Secrets**: Generate via `openssl rand -base64 32`[^1]
-3. **OAuth Credentials**: Register apps at Google Cloud Console and GitHub[^1]
-4. **Pusher Account**: Create at pusher.com for real-time features[^1]
-5. **Cloudinary Account**: Sign up for image storage[^1]
-6. **Resend Account**: Register for transactional email[^1]
+1. **PostgreSQL Database**: Create database and set `DATABASE_URL`
+2. **NextAuth Secrets**: Generate via `openssl rand -base64 32`
+3. **OAuth Credentials**: Register apps at Google Cloud Console and GitHub
+4. **Pusher Account**: Create at pusher.com for real-time features
+5. **Cloudinary Account**: Sign up for image storage
+6. **Resend Account**: Register for transactional email
 
 ## Development Workflow
 
-### Key npm Scripts[^1]
+### Key npm Scripts
 
-| Script                      | Purpose                                                                 |
-| :-------------------------- | :---------------------------------------------------------------------- |
-| `npm run dev` [^1]          | Start development server on port 3000                                   |
-| `npm run build` [^1]        | Build production bundle                                                 |
-| `npm run start` [^1]        | Start production server                                                 |
-| `npm run lint` [^1]         | Run ESLint checks                                                       |
-| `npm run vercel-build` [^1] | Build script for Vercel deployment (includes DB migrations and seeding) |
+| Script                 | Purpose                                                                 |
+| :--------------------- | :---------------------------------------------------------------------- |
+| `npm run dev`          | Start development server on port 3000                                   |
+| `npm run build`        | Build production bundle                                                 |
+| `npm run start`        | Start production server                                                 |
+| `npm run lint`         | Run ESLint checks                                                       |
+| `npm run vercel-build` | Build script for Vercel deployment (includes DB migrations and seeding) |
 
-### Code Organization Best Practices[^1]
+### Code Organization Best Practices
 
-- **Server Actions** in `src/actions/` for mutations and database queries[^1]
-- **Components** split into UI components (`/ui`), feature components, and pages[^1]
-- **Hooks** in `src/hooks/` for reusable stateful logic[^1]
-- **Lib** utilities isolated in `src/lib/` for configuration and helpers[^1]
-- **Schemas** in `src/lib/schemas/` for Zod validation[^1]
+- **Server Actions** in `src/actions/` for mutations and database queries
+- **Components** split into UI components (`/ui`), feature components, and pages
+- **Hooks** in `src/hooks/` for reusable stateful logic
+- **Lib** utilities isolated in `src/lib/` for configuration and helpers
+- **Schemas** in `src/lib/schemas/` for Zod validation
 
-### Type Safety with TypeScript[^1]
+### Type Safety with TypeScript
 
-- Custom type definitions in `src/types/`[^1]
-- NextAuth types extended for `profileComplete` status[^1]
-- Action results wrapped in `ActionResult<T>` type for consistent error handling[^1]
+- Custom type definitions in `src/types/`
+- NextAuth types extended for `profileComplete` status
+- Action results wrapped in `ActionResult<T>` type for consistent error handling
 
 ## Deployment
 
-### Vercel Deployment[^1]
+### Vercel Deployment
 
-**Automatic via Vercel CLI or Git Integration**:[^1]
+**Automatic via Vercel CLI or Git Integration**:
 
 ```bash
 # Deploy to Vercel
@@ -722,33 +720,33 @@ vercel
 # Run build process from package.json: npm run vercel-build
 ```
 
-**Build Process**:[^1]
+**Build Process**:
 
-The `vercel-build` script automates:[^1]
+The `vercel-build` script automates:
 
-1. Prisma client generation[^1]
-2. Database migrations[^1]
-3. Database seeding[^1]
-4. Next.js build[^1]
+1. Prisma client generation
+2. Database migrations
+3. Database seeding
+4. Next.js build
 
-### Environment Variables on Vercel[^1]
+### Environment Variables on Vercel
 
-1. Go to Vercel Dashboard → Project Settings → Environment Variables[^1]
-2. Add all variables from `.env.local`[^1]
-3. Redeploy to apply[^1]
+1. Go to Vercel Dashboard → Project Settings → Environment Variables
+2. Add all variables from `.env.local`
+3. Redeploy to apply
 
-### Production Considerations[^1]
+### Production Considerations
 
-- **Database**: Use managed PostgreSQL (Neon, AWS RDS, Vercel Postgres)[^1]
-- **NEXTAUTH_URL**: Set to production domain[^1]
-- **NEXTAUTH_SECRET**: Use strong, 32+ character secret[^1]
-- **Image Optimization**: Enabled via Next.js with Cloudinary CDN[^1]
+- **Database**: Use managed PostgreSQL (Neon, AWS RDS, Vercel Postgres)
+- **NEXTAUTH_URL**: Set to production domain
+- **NEXTAUTH_SECRET**: Use strong, 32+ character secret
+- **Image Optimization**: Enabled via Next.js with Cloudinary CDN
 
 ## Key Implementation Details
 
-### Real-Time Messaging with Pusher[^1]
+### Real-Time Messaging with Pusher
 
-Pusher enables instant message delivery and presence tracking:[^1]
+Pusher enables instant message delivery and presence tracking:
 
 ```typescript
 // Server: Send message via Pusher
@@ -761,23 +759,23 @@ channel.bind("message", (data) => {
 });
 ```
 
-**Custom Hooks**:[^1]
+**Custom Hooks**:
 
-- `useNotificationChannel()` listens for new messages[^1]
-- `usePresenceChannel()` tracks online members[^1]
-- `useMessages()` fetches and caches message history[^1]
+- `useNotificationChannel()` listens for new messages
+- `usePresenceChannel()` tracks online members
+- `useMessages()` fetches and caches message history
 
-### Image Management with Cloudinary[^1]
+### Image Management with Cloudinary
 
-Images are uploaded to Cloudinary for storage and CDN delivery:[^1]
+Images are uploaded to Cloudinary for storage and CDN delivery:
 
-- **Client-Side Upload**: Uses CldUploadWidget or direct API[^1]
-- **Server-Side Signing**: Signs URLs for secure image access[^1]
-- **Public ID Storage**: Saved in database for future management[^1]
+- **Client-Side Upload**: Uses CldUploadWidget or direct API
+- **Server-Side Signing**: Signs URLs for secure image access
+- **Public ID Storage**: Saved in database for future management
 
-### Form Validation with Zod[^1]
+### Form Validation with Zod
 
-All forms validated server-side using Zod schemas:[^1]
+All forms validated server-side using Zod schemas:
 
 ```typescript
 // Example: RegisterSchema
@@ -790,31 +788,31 @@ const registerSchema = z.object({
 });
 ```
 
-Client-side integration via React Hook Form and resolvers.[^1]
+Client-side integration via React Hook Form and resolvers.
 
-### State Management[^1]
+### State Management
 
-- **Zustand Stores**: Message and presence state for real-time sync[^1]
-- **React Query Integration**: Optional for server state (can be added)[^1]
-- **Context API**: For theme and authentication context[^1]
+- **Zustand Stores**: Message and presence state for real-time sync
+- **React Query Integration**: Optional for server state (can be added)
+- **Context API**: For theme and authentication context
 
-### UI/UX with Tailwind \& shadcn[^1]
+### UI/UX with Tailwind \& shadcn
 
-- **Responsive Design**: Mobile-first Tailwind utilities[^1]
-- **Dark Mode**: Managed via `next-themes` with CSS variables[^1]
-- **Component Library**: Pre-built, accessible shadcn components[^1]
-- **Icons**: Lucide React for consistent icon set[^1]
-- **Animations**: Framer Motion for smooth transitions on CTAs[^1]
+- **Responsive Design**: Mobile-first Tailwind utilities
+- **Dark Mode**: Managed via `next-themes` with CSS variables
+- **Component Library**: Pre-built, accessible shadcn components
+- **Icons**: Lucide React for consistent icon set
+- **Animations**: Framer Motion for smooth transitions on CTAs
 
-### Seed Data[^1]
+### Seed Data
 
-`prisma/membersData.ts` includes 10 test members with:[^1]
+`prisma/membersData.ts` includes 10 test members with:
 
-- Diverse backgrounds (engineers, designers, wellness coaches)[^1]
-- Realistic bios and locations (Vancouver area)[^1]
-- Sample profile images[^1]
+- Diverse backgrounds (engineers, designers, wellness coaches)
+- Realistic bios and locations (Vancouver area)
+- Sample profile images
 
-Run `npx prisma db seed` to populate the database.[^1]
+Run `npx prisma db seed` to populate the database.
 
 ---
 
@@ -822,14 +820,9 @@ Run `npx prisma db seed` to populate the database.[^1]
 
 **DevMatch** demonstrates a production-ready full-stack dating application built with modern technologies. It combines **robust authentication**, **real-time messaging**, **intuitive UI design**, and **scalable architecture** to create an engaging platform for developers to connect and collaborate.
 
-The modular structure, TypeScript type safety, and comprehensive use of industry-standard libraries make it an excellent foundation for further features such as advanced filtering, recommendation algorithms, verification systems, and in-app notifications.[^1]
+The modular structure, TypeScript type safety, and comprehensive use of industry-standard libraries make it an excellent foundation for further features such as advanced filtering, recommendation algorithms, verification systems, and in-app notifications.
 
 ---
 
-This README provides a comprehensive foundation for understanding, developing, and deploying the DevMatch application. For questions or contributions, refer to the repository structure and inline code documentation.[^1]
-<span style="display:none">[^2]</span>
-
-<div align="center">⁂</div>
-
-[^1]: zzelif-builder-round-devmatch-8a5edab282632443-10.txt
-[^2]: WC-Launchpad-Builder-Round_Build-a-Dating-App.pdf
+This README provides a comprehensive foundation for understanding, developing, and deploying the DevMatch application. For questions or contributions, refer to the repository structure and inline code documentation.
+<span style="display:none"></span>
