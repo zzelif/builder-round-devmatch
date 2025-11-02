@@ -10,49 +10,53 @@ const prisma = new PrismaClient();
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   callbacks: {
-    async jwt({ token, user, trigger }) {
-      if (user || trigger === "update") {
-        if (user) {
-          token.profileComplete = (user as User).profileComplete;
-          token.sub = user.id;
-          token.email = user.email;
-        }
+    async jwt({ token, user, trigger, session }) {
+      // Initialize from user object
+      if (user) {
+        token.profileComplete = (user as User).profileComplete ?? false;
+        token.sub = user.id;
+        token.email = user.email;
+      }
 
-        if (token.sub) {
-          try {
-            const dbUser = await prisma.user.findUnique({
-              where: { id: token.sub },
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
-                profileComplete: true,
-              },
-            });
+      if (trigger === "update" && session?.profileComplete !== undefined) {
+        token.profileComplete = session.profileComplete;
+      }
 
-            if (dbUser) {
-              token.name = dbUser.name;
-              token.email = dbUser.email;
-              token.picture = dbUser.image;
-              token.profileComplete = dbUser.profileComplete;
-            }
-          } catch (error) {
-            console.error("Error fetching user in JWT callback:", error);
+      if (token.sub) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.sub },
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              profileComplete: true,
+            },
+          });
+
+          if (dbUser) {
+            token.name = dbUser.name;
+            token.email = dbUser.email;
+            token.picture = dbUser.image;
+            token.profileComplete = dbUser.profileComplete;
           }
+        } catch (error) {
+          console.error("Error fetching user in JWT callback:", error);
         }
       }
+
       return token;
     },
 
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
-        session.user.name = token.name;
+        session.user.name = token.name ?? undefined;
         session.user.email = token.email as string;
-        session.user.image = token.picture;
+        session.user.image = token.picture ?? undefined;
         session.user.profileComplete =
-          (token.profileComplete as boolean) || false;
+          (token.profileComplete as boolean) ?? false;
       }
       return session;
     },

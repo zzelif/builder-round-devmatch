@@ -277,7 +277,12 @@ export async function completeSocialLoginProfile(
 ): Promise<ActionResult<string>> {
   const session = await auth();
 
-  if (!session?.user) return { status: "error", error: "User not found" };
+  if (!session?.user) {
+    return { status: "error", error: "User not found" };
+  }
+
+  console.log("✅ Session user:", session.user.id);
+  console.log("📋 Form data:", data);
 
   try {
     const genderMapping = {
@@ -291,15 +296,21 @@ export async function completeSocialLoginProfile(
       where: { userId: session.user.id },
     });
 
+    let user;
+
     if (existingMember) {
-      const user = await prisma.user.update({
+      console.log("🔄 Updating existing member...");
+      user = await prisma.user.update({
         where: { id: session.user.id },
         data: {
           profileComplete: true,
+          name: data.name,
+          image: data.profileImageUrl,
+
           member: {
             update: {
-              name: data.name || (session.user.name as string),
-              image: data.profileImageUrl || session.user.image,
+              name: data.name,
+              image: data.profileImageUrl,
               gender: genderMapping[data.gender],
               dateOfBirth: new Date(data.dateOfBirth),
               bio: data.bio,
@@ -328,47 +339,48 @@ export async function completeSocialLoginProfile(
           },
         },
       });
+    } else {
+      console.log("➕ Creating new member...");
+      user = await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          profileComplete: true,
+          name: data.name,
+          image: data.profileImageUrl,
 
-      const provider = user.accounts?.[0]?.provider || "credentials";
-      return { status: "success", data: provider };
+          member: {
+            create: {
+              name: data.name,
+              image: data.profileImageUrl,
+              gender: genderMapping[data.gender],
+              dateOfBirth: new Date(data.dateOfBirth),
+              bio: data.bio,
+              age: data.age,
+              city: data.city,
+              country: data.country,
+              ...(data.profileImageUrl &&
+                data.profileImagePublicId && {
+                  photos: {
+                    create: [
+                      {
+                        url: data.profileImageUrl,
+                        publicId: data.profileImagePublicId,
+                      },
+                    ],
+                  },
+                }),
+            },
+          },
+        },
+        select: {
+          accounts: {
+            select: {
+              provider: true,
+            },
+          },
+        },
+      });
     }
-
-    const user = await prisma.user.update({
-      where: { id: session.user.id },
-      data: {
-        profileComplete: true,
-        member: {
-          create: {
-            name: data.name || (session.user.name as string),
-            image: data.profileImageUrl || session.user.image,
-            gender: genderMapping[data.gender],
-            dateOfBirth: new Date(data.dateOfBirth),
-            bio: data.bio,
-            age: data.age,
-            city: data.city,
-            country: data.country,
-            ...(data.profileImageUrl &&
-              data.profileImagePublicId && {
-                photos: {
-                  create: [
-                    {
-                      url: data.profileImageUrl,
-                      publicId: data.profileImagePublicId,
-                    },
-                  ],
-                },
-              }),
-          },
-        },
-      },
-      select: {
-        accounts: {
-          select: {
-            provider: true,
-          },
-        },
-      },
-    });
 
     const provider = user.accounts?.[0]?.provider || "credentials";
     return { status: "success", data: provider };

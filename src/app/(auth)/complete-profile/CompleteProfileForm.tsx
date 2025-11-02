@@ -42,6 +42,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { toast } from "react-toastify";
 
 export default function CompleteProfileForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,17 +74,25 @@ export default function CompleteProfileForm() {
   };
 
   const onSubmit = async (data: ProfileDetailsSchema) => {
+    console.log("📝 Form submitted with data:", data);
     setIsSubmitting(true);
+
     try {
       const result = await completeSocialLoginProfile(data);
 
       if (result.status === "success") {
-        router.refresh();
+        toast.success("Profile completed! Redirecting...");
 
-        setTimeout(() => {
-          router.push("/networks");
-        }, 500);
+        await router.refresh();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        router.push("/networks");
+      } else {
+        console.error("Error from server:", result.error);
+        toast.error(result.error as string);
       }
+    } catch (error) {
+      console.error("Exception caught:", error);
+      toast.error("An error occurred. Check console logs.");
     } finally {
       setIsSubmitting(false);
     }
@@ -284,7 +293,7 @@ export default function CompleteProfileForm() {
                 <Button
                   type="submit"
                   className="flex-1 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
-                  disabled={!isValid}
+                  disabled={!isValid || isSubmitting}
                 >
                   {isSubmitting ? (
                     <>
