@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { UserCircle, Heart, LogOut, ChevronDown, Zap } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import ThemeSwitch from "@/components/ThemeToggle";
 
 interface MenuProps {
@@ -82,9 +82,9 @@ export default function Menu({ user }: MenuProps) {
           <Link href="/lists" className="flex items-center cursor-pointer">
             <Zap className="mr-2 h-4 w-4 text-warning" />
             <span>Connections</span>
-            <Badge variant="secondary" className="ml-auto text-xs">
+            {/* <Badge variant="secondary" className="ml-auto text-xs">
               New
-            </Badge>
+            </Badge> */}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex items-center justify-between cursor-default focus:bg-transparent">

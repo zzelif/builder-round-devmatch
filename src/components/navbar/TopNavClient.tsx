@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import Menu from "./Menu";
+import ThemeSwitch from "../ThemeToggle";
 // import { Badge } from "@/components/ui/badge";
 
 const navigationLinks = [
@@ -169,11 +170,12 @@ export default function TopNav({ session }: TopNavClientProps) {
           )}
 
           {/* Right Section - Auth Buttons / User Menu */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {session?.user ? (
               <Menu user={session.user} />
             ) : (
               <div className="flex items-center gap-2">
+                <ThemeSwitch />
                 <Button
                   asChild
                   variant="ghost"
