@@ -14,18 +14,18 @@ export default function Home({ session }: HomeProps) {
   const isSignedIn = !!session?.user;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center">
-      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+    <div className="flex flex-col items-center justify-center min-h-screen py-12 md:py-20 px-4 text-center">
+      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in md:space-y-12">
         {/* Hero Section */}
-        <div className="space-y-4">
+        <div className="space-y-4 md:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary/20"
+            className="inline-flex items-center gap-2 px-3 md:px-4 py-2 rounded-full glass border border-primary/20"
           >
-            <Code2 className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">
+            <Code2 className="h-3 w-3 md:h-4 md:w-4 text-primary shrink-0" />
+            <span className="text-xs md:text-sm font-medium whitespace-nowrap">
               For Developers, By Developers
             </span>
           </motion.div>

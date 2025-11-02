@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Code, Github, Linkedin, Mail } from "lucide-react";
+import { Heart, Github, Linkedin, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
@@ -58,8 +58,7 @@ export default function Footer() {
               href="/"
               className="flex items-center gap-2 text-xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent"
             >
-              <Code className="w-6 h-6 text-primary" />
-              DevMatch
+              <span>DevMatch</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Connect with fellow developers who share your passion for code and
