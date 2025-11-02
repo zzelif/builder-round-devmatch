@@ -1,4 +1,4 @@
-// src/app/networks/MemberCard.tsx - Fixed CSS class name
+// src/app/networks/MemberCard.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -7,19 +7,13 @@ import { Member } from "@/generated/prisma";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Heart, X } from "lucide-react";
-// import { Badge } from "@/components/ui/badge";
 
 type Props = {
   member: Member;
   onSwipe: (direction: "left" | "right", memberId: string) => void;
-  onSwipeComplete: () => void;
 };
 
-export default function MemberCard({
-  member,
-  onSwipe,
-  onSwipeComplete,
-}: Props) {
+export default function MemberCard({ member, onSwipe }: Props) {
   const [exitX, setExitX] = useState(0);
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
@@ -37,16 +31,15 @@ export default function MemberCard({
     if (info.offset.x > threshold) {
       setExitX(300);
       onSwipe("right", member.userId);
-      onSwipeComplete();
     } else if (info.offset.x < -threshold) {
       setExitX(-300);
       onSwipe("left", member.userId);
-      onSwipeComplete();
     }
   };
 
   return (
     <motion.div
+      key={`card-${member.id}`}
       className="absolute inset-0 cursor-grab active:cursor-grabbing"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
@@ -65,7 +58,7 @@ export default function MemberCard({
       style={{ x, rotate, opacity }}
       whileDrag={{ scale: 1.02 }}
     >
-      <Card className="w-full h-full bg-white dark:bg-slate-900 shadow-2xl border-0 overflow-hidden">
+      <Card className="w-full h-full bg-background dark:bg-slate-900 shadow-2xl border-0 overflow-hidden">
         <CardContent className="p-0 h-full flex flex-col relative">
           {/* Profile Image Section */}
           <div className="relative h-2/3 overflow-hidden">
@@ -93,58 +86,37 @@ export default function MemberCard({
               className="absolute top-8 right-8 px-4 py-2 rounded-full font-bold text-lg flex items-center gap-2 shadow-lg"
               style={{ opacity: passOpacity }}
             >
-              <div className="w-12 h-12 bg-danger rounded-full flex items-center justify-center">
-                <X className="w-6 h-6 text-danger-foreground" />
+              <div className="w-12 h-12 bg-destructive rounded-full flex items-center justify-center">
+                <X className="w-6 h-6 text-white" />
               </div>
-              <span className="text-danger font-black text-xl">PASS</span>
+              <span className="text-destructive font-black text-xl">PASS</span>
             </motion.div>
 
             <motion.div
               className="absolute top-8 left-8 px-4 py-2 rounded-full font-bold text-lg flex items-center gap-2 shadow-lg"
               style={{ opacity: likeOpacity }}
             >
-              <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-success-foreground fill-current" />
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                <Heart className="w-6 h-6 text-white fill-current" />
               </div>
-              <span className="text-success font-black text-xl">LIKE</span>
+              <span className="text-green-500 font-black text-xl">LIKE</span>
             </motion.div>
-
-            {/* Developer Badge */}
-            {/* <div className="absolute top-4 left-4">
-              <Badge className="bg-primary text-primary-foreground shadow-lg">
-                <Briefcase className="w-3 h-3 mr-1" />
-                Developer
-              </Badge>
-            </div> */}
           </div>
 
-          {/* Enhanced Profile Info Section */}
-          <div className="p-6 h-1/3 flex flex-col justify-between bg-white dark:bg-slate-900">
+          {/* Profile Info Section */}
+          <div className="p-6 h-1/3 flex flex-col justify-between bg-background dark:bg-slate-900">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-bold text-foreground">
                   {member.name}
                 </h2>
-                <span className="text-xl text-gray-600 dark:text-gray-300 font-medium">
+                <span className="text-xl text-muted-foreground font-medium">
                   {member.age}
                 </span>
               </div>
-
-              {/* Skills/Tags (if you have them) */}
-              {/* <div className="flex flex-wrap gap-2 mb-3">
-                <Badge variant="secondary" className="text-xs">
-                  React
-                </Badge>
-                <Badge variant="secondary" className="text-xs">
-                  TypeScript
-                </Badge>
-                <Badge variant="secondary" className="text-xs">
-                  Node.js
-                </Badge>
-              </div> */}
             </div>
 
-            <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2 leading-relaxed">
+            <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
               {member.bio}
             </p>
           </div>
