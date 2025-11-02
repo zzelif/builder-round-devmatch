@@ -287,20 +287,77 @@ export async function completeSocialLoginProfile(
       "prefer-not-to-say": "PREFER_NOT_TO_SAY",
     } as const;
 
+    const existingMember = await prisma.member.findUnique({
+      where: { userId: session.user.id },
+    });
+
+    if (existingMember) {
+      const user = await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          profileComplete: true,
+          member: {
+            update: {
+              name: data.name || (session.user.name as string),
+              image: data.profileImageUrl || session.user.image,
+              gender: genderMapping[data.gender],
+              dateOfBirth: new Date(data.dateOfBirth),
+              bio: data.bio,
+              age: data.age,
+              city: data.city,
+              country: data.country,
+              ...(data.profileImageUrl &&
+                data.profileImagePublicId && {
+                  photos: {
+                    create: [
+                      {
+                        url: data.profileImageUrl,
+                        publicId: data.profileImagePublicId,
+                      },
+                    ],
+                  },
+                }),
+            },
+          },
+        },
+        select: {
+          accounts: {
+            select: {
+              provider: true,
+            },
+          },
+        },
+      });
+
+      const provider = user.accounts?.[0]?.provider || "credentials";
+      return { status: "success", data: provider };
+    }
+
     const user = await prisma.user.update({
       where: { id: session.user.id },
       data: {
         profileComplete: true,
         member: {
           create: {
-            name: session.user.name as string,
-            image: session.user.image,
+            name: data.name || (session.user.name as string),
+            image: data.profileImageUrl || session.user.image,
             gender: genderMapping[data.gender],
             dateOfBirth: new Date(data.dateOfBirth),
             bio: data.bio,
             age: data.age,
             city: data.city,
             country: data.country,
+            ...(data.profileImageUrl &&
+              data.profileImagePublicId && {
+                photos: {
+                  create: [
+                    {
+                      url: data.profileImageUrl,
+                      publicId: data.profileImagePublicId,
+                    },
+                  ],
+                },
+              }),
           },
         },
       },
@@ -314,10 +371,9 @@ export async function completeSocialLoginProfile(
     });
 
     const provider = user.accounts?.[0]?.provider || "credentials";
-
     return { status: "success", data: provider };
   } catch (error) {
-    console.log(error);
+    console.error("Error completing profile:", error);
     return { status: "error", error: "Failed to complete profile" };
   }
 }
