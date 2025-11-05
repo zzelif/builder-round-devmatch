@@ -99,32 +99,36 @@ export default function CompleteProfileForm() {
   };
 
   return (
-    <Card>
-      <CardHeader className="text-center">
-        <CardTitle className="text-xl">Complete your profile</CardTitle>
-        <CardDescription>Tell us about yourself</CardDescription>
-      </CardHeader>
+    <div className="w-full max-w-2xl mx-auto px-4 py-8">
+      <Card className="border border-border/50 shadow-xl">
+        <CardHeader className="text-center pb-6">
+          <CardTitle className="text-2xl font-bold text-foreground mb-2">
+            Complete your profile
+          </CardTitle>
+          <CardDescription className="text-base text-muted-foreground">
+            Tell us about yourself so other developers can get to know you
+          </CardDescription>
+        </CardHeader>
 
-      <CardContent>
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FieldGroup>
+        <CardContent className="pt-0">
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Profile Picture Upload */}
-              <div className="flex flex-col items-center space-y-4 mb-6">
+              <div className="flex flex-col items-center space-y-4 pb-6 border-b border-border/30">
                 <div className="relative group">
                   {previewImage ? (
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg">
+                    <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-primary/20 shadow-lg hover:shadow-xl transition-shadow">
                       <Image
                         src={previewImage}
                         alt="Profile preview"
-                        width={128}
-                        height={128}
+                        width={160}
+                        height={160}
                         className="object-cover w-full h-full"
                       />
                     </div>
                   ) : (
-                    <div className="w-32 h-32 rounded-full bg-linear-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/20 dark:to-purple-900/20 flex items-center justify-center border-4 border-primary/20 shadow-lg">
-                      <User className="w-12 h-12 text-indigo-400" />
+                    <div className="w-40 h-40 rounded-full bg-linear-to-br from-indigo-100/50 to-purple-100/50 dark:from-indigo-900/20 dark:to-purple-900/20 flex items-center justify-center border-4 border-dashed border-primary/30 dark:border-primary/20">
+                      <User className="w-16 h-16 text-muted-foreground/50" />
                     </div>
                   )}
                 </div>
@@ -136,155 +140,186 @@ export default function CompleteProfileForm() {
                   onSuccess={handleCloudinaryUpload}
                   signatureEndpoint="/api/sign-image"
                   uploadPreset="builder-devmatch-profiles"
-                  className="flex items-center gap-2 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="flex items-center gap-2 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 font-medium cursor-pointer"
                 >
                   <Upload className="w-4 h-4" />
                   {previewImage ? "Change Photo" : "Upload Photo"}
                 </CldUploadButton>
 
-                <FieldDescription className="text-center">
+                <FieldDescription className="text-center text-xs">
                   Upload your best photo • JPG, PNG, WebP • Max 10MB
                 </FieldDescription>
               </div>
 
-              <Field>
-                <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Juan Dela Cruz"
-                  className={cn(errors.name && "border-destructive")}
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <p className="text-sm text-destructive mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </Field>
+              {/* Form Fields */}
+              <FieldGroup className="space-y-5">
+                <Field>
+                  <FieldLabel htmlFor="name">Full Name *</FieldLabel>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Juan Dela Cruz"
+                    className={cn(
+                      "transition-colors",
+                      errors.name &&
+                        "border-destructive focus-visible:ring-destructive"
+                    )}
+                    {...register("name")}
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                      ⚠️ {errors.name.message}
+                    </p>
+                  )}
+                </Field>
 
-              <Field>
-                <FieldLabel htmlFor="age">Age</FieldLabel>
-                <Input
-                  id="age"
-                  type="number"
-                  placeholder="25"
-                  className={cn(errors.age && "border-destructive")}
-                  {...register("age", { valueAsNumber: true })}
-                />
-                {errors.age && (
-                  <p className="text-sm text-destructive mt-1">
-                    {errors.age.message}
-                  </p>
-                )}
-              </Field>
+                <Field>
+                  <FieldLabel htmlFor="age">Age *</FieldLabel>
+                  <Input
+                    id="age"
+                    type="number"
+                    placeholder="25"
+                    min="18"
+                    max="120"
+                    className={cn(
+                      "transition-colors",
+                      errors.age &&
+                        "border-destructive focus-visible:ring-destructive"
+                    )}
+                    {...register("age", { valueAsNumber: true })}
+                  />
+                  {errors.age && (
+                    <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                      ⚠️ {errors.age.message}
+                    </p>
+                  )}
+                </Field>
 
-              <Field>
-                <FieldLabel>Gender</FieldLabel>
-                <Controller
-                  name="gender"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                    >
-                      <SelectTrigger
-                        className={cn(errors.gender && "border-destructive")}
+                <Field>
+                  <FieldLabel>Gender *</FieldLabel>
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
                       >
-                        <SelectValue placeholder="Select your gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="non-binary">Non-binary</SelectItem>
-                        <SelectItem value="prefer-not-to-say">
-                          Prefer not to say
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                        <SelectTrigger
+                          className={cn(
+                            "transition-colors",
+                            errors.gender &&
+                              "border-destructive focus-visible:ring-destructive"
+                          )}
+                        >
+                          <SelectValue placeholder="Select your gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="non-binary">Non-binary</SelectItem>
+                          <SelectItem value="prefer-not-to-say">
+                            Prefer not to say
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.gender && (
+                    <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                      ⚠️ {errors.gender.message}
+                    </p>
                   )}
-                />
-                {errors.gender && (
-                  <p className="text-sm text-destructive mt-1">
-                    {errors.gender.message}
-                  </p>
-                )}
-              </Field>
+                </Field>
 
-              <Field>
-                <FieldLabel>Date of Birth</FieldLabel>
-                <Controller
-                  name="dateOfBirth"
-                  control={control}
-                  render={({ field }) => (
-                    <BirthdayPicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      error={errors.dateOfBirth}
+                <Field>
+                  <FieldLabel>Date of Birth *</FieldLabel>
+                  <Controller
+                    name="dateOfBirth"
+                    control={control}
+                    render={({ field }) => (
+                      <BirthdayPicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        error={errors.dateOfBirth}
+                      />
+                    )}
+                  />
+                </Field>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <Field>
+                    <FieldLabel htmlFor="city">City *</FieldLabel>
+                    <Input
+                      id="city"
+                      type="text"
+                      placeholder="Manila"
+                      className={cn(
+                        "transition-colors",
+                        errors.city &&
+                          "border-destructive focus-visible:ring-destructive"
+                      )}
+                      {...register("city")}
                     />
-                  )}
-                />
-              </Field>
+                    {errors.city && (
+                      <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                        ⚠️ {errors.city.message}
+                      </p>
+                    )}
+                  </Field>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel htmlFor="country">Country *</FieldLabel>
+                    <Input
+                      id="country"
+                      type="text"
+                      placeholder="Philippines"
+                      className={cn(
+                        "transition-colors",
+                        errors.country &&
+                          "border-destructive focus-visible:ring-destructive"
+                      )}
+                      {...register("country")}
+                    />
+                    {errors.country && (
+                      <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                        ⚠️ {errors.country.message}
+                      </p>
+                    )}
+                  </Field>
+                </div>
+
                 <Field>
-                  <FieldLabel htmlFor="city">City</FieldLabel>
-                  <Input
-                    id="city"
-                    type="text"
-                    placeholder="Manila"
-                    className={cn(errors.city && "border-destructive")}
-                    {...register("city")}
+                  <FieldLabel htmlFor="bio">Short Bio *</FieldLabel>
+                  <Textarea
+                    id="bio"
+                    placeholder="Who are you, what do you like to do, and what are you looking for?"
+                    className={cn(
+                      "min-h-24 resize-none transition-colors",
+                      errors.bio &&
+                        "border-destructive focus-visible:ring-destructive"
+                    )}
+                    rows={4}
+                    {...register("bio")}
                   />
-                  {errors.city && (
-                    <p className="text-sm text-destructive mt-1">
-                      {errors.city.message}
+                  {errors.bio && (
+                    <p className="text-sm text-destructive mt-1.5 flex items-center gap-1">
+                      ⚠️ {errors.bio.message}
                     </p>
                   )}
+                  <FieldDescription className="mt-2">
+                    Share about your personality, hobbies, and what you&apos;re
+                    looking for
+                  </FieldDescription>
                 </Field>
+              </FieldGroup>
 
-                <Field>
-                  <FieldLabel htmlFor="country">Country</FieldLabel>
-                  <Input
-                    id="country"
-                    type="text"
-                    placeholder="Philippines"
-                    className={cn(errors.country && "border-destructive")}
-                    {...register("country")}
-                  />
-                  {errors.country && (
-                    <p className="text-sm text-destructive mt-1">
-                      {errors.country.message}
-                    </p>
-                  )}
-                </Field>
-              </div>
-
-              <Field>
-                <FieldLabel htmlFor="bio">Short Bio</FieldLabel>
-                <Textarea
-                  id="bio"
-                  placeholder="Who are you, what do u like to do, and what are you looking for?"
-                  className={cn(errors.bio && "border-destructive")}
-                  rows={4}
-                  {...register("bio")}
-                />
-                {errors.bio && (
-                  <p className="text-sm text-destructive mt-1">
-                    {errors.bio.message}
-                  </p>
-                )}
-                <FieldDescription>
-                  Describe yourself, your hobbies, personality, life...
-                </FieldDescription>
-              </Field>
-
-              <div className="flex gap-4">
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-6 border-t border-border/30">
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 h-11 font-medium transition-all"
                   onClick={router.back}
                   disabled={isSubmitting}
                 >
@@ -292,23 +327,28 @@ export default function CompleteProfileForm() {
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                  className="flex-1 h-11 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                   disabled={!isValid || isSubmitting}
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Completing registration...
+                      Completing...
                     </>
                   ) : (
                     "Complete Registration"
                   )}
                 </Button>
               </div>
-            </FieldGroup>
-          </form>
-        </FormProvider>
-      </CardContent>
-    </Card>
+
+              {/* Required Fields Notice */}
+              <p className="text-xs text-muted-foreground text-center">
+                * All fields are required to complete your profile
+              </p>
+            </form>
+          </FormProvider>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -7,6 +7,7 @@ import TopNav from "@/components/navbar/TopNavClient";
 import Providers from "@/components/Providers";
 import { auth } from "@/auth";
 import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default async function RootLayout({
           <main className="mx-auto">{children}</main>
           <Footer />
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
